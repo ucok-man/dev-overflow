@@ -4,5 +4,6 @@
     "next/typescript",
     "plugin:tailwindcss/recommended",
     "prettier"
-  ]
+  ],
+  "ignorePatterns": ["tailwind.config.ts"]
 }
