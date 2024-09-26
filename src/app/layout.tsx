@@ -1,5 +1,6 @@
+import AuthProvider from "@/context/auth-provider";
+import { ThemeProvider } from "@/context/theme-provider";
 import "@/styles/globals.css";
-import { ClerkProvider } from "@clerk/nextjs";
 import type { Metadata } from "next";
 import { Inter, Space_Grotesk } from "next/font/google";
 import React from "react";
@@ -31,21 +32,13 @@ type Props = {
 
 export default function RootLayout({ children }: Props) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
         className={`${inter.variable} ${spaceGrotesk.variable} antialiased`}
       >
-        <ClerkProvider
-          appearance={{
-            elements: {
-              formFieldInput: "focus-visible:outline-none",
-              formButtonPrimary: "primary-gradient",
-              footerActionLink: "primary-text-gradient hover:no-underline",
-            },
-          }}
-        >
-          {children}
-        </ClerkProvider>
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          <AuthProvider>{children}</AuthProvider>
+        </ThemeProvider>
       </body>
     </html>
   );
