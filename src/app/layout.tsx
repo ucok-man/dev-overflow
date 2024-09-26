@@ -35,7 +35,17 @@ export default function RootLayout({ children }: Props) {
       <body
         className={`${inter.variable} ${spaceGrotesk.variable} antialiased`}
       >
-        <ClerkProvider>{children}</ClerkProvider>
+        <ClerkProvider
+          appearance={{
+            elements: {
+              formFieldInput: "focus-visible:outline-none",
+              formButtonPrimary: "primary-gradient",
+              footerActionLink: "primary-text-gradient hover:no-underline",
+            },
+          }}
+        >
+          {children}
+        </ClerkProvider>
       </body>
     </html>
   );

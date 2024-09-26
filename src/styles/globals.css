@@ -88,3 +88,15 @@ code {
   padding-bottom: 140px;
   display: block;
 }
+
+/* ---------------------------------------------------------------- */
+/*                               Clerk                              */
+/* ---------------------------------------------------------------- */
+.cl-formFieldInput:focus-within {
+  box-shadow: rgba(0, 0, 0, 0.28) 0px 0px 0px 1px,
+    rgba(0, 0, 0, 0.11) 0px 0px 1px 0px, rgba(255, 110, 4, 0.09) 0px 0px 0px 4px !important;
+}
+
+.cl-formButtonPrimary {
+  box-shadow: rgba(251, 118, 3, 0.646) 0px 0px 0px 1px !important;
+}
