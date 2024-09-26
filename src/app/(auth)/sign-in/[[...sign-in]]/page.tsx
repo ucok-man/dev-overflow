@@ -1,3 +1,9 @@
+import { SignIn } from "@clerk/nextjs";
+
 export default function SigninPage() {
-  return <div>SigninPage</div>;
+  return (
+    <div>
+      <SignIn appearance={{}} />
+    </div>
+  );
 }
