@@ -1,3 +1,4 @@
+import { SkeletonTheme } from "@/components";
 import AuthProvider from "@/context/auth-provider";
 import { ThemeProvider } from "@/context/theme-provider";
 import "@/styles/globals.css";
@@ -37,7 +38,9 @@ export default function RootLayout({ children }: Props) {
         className={`${inter.variable} ${spaceGrotesk.variable} antialiased`}
       >
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <AuthProvider>{children}</AuthProvider>
+          <AuthProvider>
+            <SkeletonTheme>{children}</SkeletonTheme>
+          </AuthProvider>
         </ThemeProvider>
       </body>
     </html>

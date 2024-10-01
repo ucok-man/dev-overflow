@@ -1,4 +1,5 @@
 import Logo from "./logo";
+import ThemeSwithcer from "./theme-switcher/theme-switcher";
 
 export default function Navbar() {
   return (
@@ -6,7 +7,7 @@ export default function Navbar() {
       <Logo />
       [GLOBAL SEARCH]
       <div className="flex-between gap-5">
-        [THEME SWITCHER] [USER ICON] [MOBILE NAV]
+        <ThemeSwithcer /> [USER ICON] [MOBILE NAV]
       </div>
     </nav>
   );
