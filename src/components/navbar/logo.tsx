@@ -1,7 +1,11 @@
 import Image from "next/image";
 import Link from "next/link";
 
-export default function Logo() {
+type Props = {
+  isSmHidden: boolean;
+};
+
+export default function Logo({ isSmHidden }: Props) {
   return (
     <Link href="/" className="flex items-center gap-1">
       <Image
@@ -10,7 +14,11 @@ export default function Logo() {
         height={23}
         alt="Dev Overflow Logo"
       />
-      <p className="h2-bold font-spaceGrotesk text-dark-100 dark:text-light-900 max-sm:hidden">
+      <p
+        className={`h2-bold text-dark100_light900 font-spaceGrotesk ${
+          isSmHidden ? "max-sm:hidden" : ""
+        }`}
+      >
         Dev <span className="text-primary-500">Overflow</span>
       </p>
     </Link>
