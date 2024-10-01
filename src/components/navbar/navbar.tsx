@@ -1,6 +1,7 @@
 import Logo from "./logo";
 import MobileNav from "./mobile/mobile-navbar";
 import ThemeSwithcer from "./theme-switcher/theme-switcher";
+import UserIcon from "./user-icon";
 
 export default function Navbar() {
   return (
@@ -9,7 +10,7 @@ export default function Navbar() {
       [GLOBAL SEARCH]
       <div className="flex-between gap-5">
         <ThemeSwithcer />
-        [USER ICON]
+        <UserIcon />
         <MobileNav />
       </div>
     </nav>
