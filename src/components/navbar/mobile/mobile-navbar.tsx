@@ -10,13 +10,15 @@ export default function MobileNavbar() {
   return (
     <Sheet>
       <SheetTrigger>
-        <Image
-          src="/assets/icons/hamburger.svg"
-          width={36}
-          height={36}
-          alt="Menu"
-          className="invert-colors sm:hidden"
-        />
+        <div className="relative size-[36px]">
+          <Image
+            src="/assets/icons/hamburger.svg"
+            width={36}
+            height={36}
+            alt="Menu"
+            className="invert-colors sm:hidden"
+          />
+        </div>
       </SheetTrigger>
       <SheetContent
         side="left"

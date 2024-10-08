@@ -1,5 +1,6 @@
 import { SkeletonTheme } from "@/components";
 import AuthProvider from "@/context/auth-provider";
+import QueryProvider from "@/context/query-provider";
 import { ThemeProvider } from "@/context/theme-provider";
 import "@/styles/globals.css";
 import type { Metadata } from "next";
@@ -39,7 +40,9 @@ export default function RootLayout({ children }: Props) {
       >
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <AuthProvider>
-            <SkeletonTheme>{children}</SkeletonTheme>
+            <SkeletonTheme>
+              <QueryProvider>{children}</QueryProvider>
+            </SkeletonTheme>
           </AuthProvider>
         </ThemeProvider>
       </body>
