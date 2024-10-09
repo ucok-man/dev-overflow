@@ -1,0 +1,103 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  clerkId    String   @unique
+  name       String
+  username   String
+  picture    String
+  email      String
+  password   String?
+  bio        String?
+  location   String?
+  website    String?
+  reputation Int
+  updatedAt  DateTime @updatedAt
+  createdAt  DateTime @default(now())
+
+  savedQuestionIds String[]   @db.ObjectId
+  savedQuestions   Question[] @relation("savedQuestions", fields: [savedQuestionIds], references: [id])
+
+  createdQuestion Question[] @relation("createdQuestionBy")
+
+  upvotedQuestionIds String[]   @db.ObjectId
+  upvotedQuestions   Question[] @relation("upvotedQuestion", fields: [upvotedQuestionIds], references: [id])
+
+  downvotedQuestionIds String[]   @db.ObjectId
+  downvotedQuestions   Question[] @relation("downvotedQuestion", fields: [downvotedQuestionIds], references: [id])
+
+  createdAnswer Answer[] @relation("createdAnswerBy")
+
+  upvotedAnswerIds String[] @db.ObjectId
+  upvotedAnswers   Answer[] @relation("upvotedAnswer", fields: [upvotedAnswerIds], references: [id])
+
+  downvotedAnswerIds String[] @db.ObjectId
+  downvotedAnswers   Answer[] @relation("downvotedAnswer", fields: [downvotedAnswerIds], references: [id])
+}
+
+model Question {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  content   String
+  views     Int
+  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now())
+
+  tagIds String[] @db.ObjectId
+  tags   Tag[]    @relation(fields: [tagIds], references: [id])
+
+  savedByIds String[] @db.ObjectId
+  savedBy    User[]   @relation("savedQuestions", fields: [savedByIds], references: [id])
+
+  createdById String @db.ObjectId
+  createdBy   User   @relation("createdQuestionBy", fields: [createdById], references: [id])
+
+  upvotedByIds String[] @db.ObjectId
+  upvotedBy    User[]   @relation("upvotedQuestion", fields: [upvotedByIds], references: [id])
+
+  downvoteddByIds String[] @db.ObjectId
+  downvotedBy     User[]   @relation("downvotedQuestion", fields: [downvoteddByIds], references: [id])
+
+  answers Answer[] @relation("answer")
+}
+
+model Answer {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  content   String
+  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now())
+
+  createdById String @db.ObjectId
+  createdBy   User   @relation("createdAnswerBy", fields: [createdById], references: [id])
+
+  questionId String   @db.ObjectId
+  question   Question @relation("answer", fields: [questionId], references: [id])
+
+  upvotedByIds String[] @db.ObjectId
+  upvotedBy    User[]   @relation("upvotedAnswer", fields: [upvotedByIds], references: [id])
+
+  downvoteddByIds String[] @db.ObjectId
+  downvotedBy     User[]   @relation("downvotedAnswer", fields: [downvoteddByIds], references: [id])
+}
+
+model Tag {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  description String
+  updatedAt   DateTime @updatedAt
+  createdAt   DateTime @default(now())
+
+  questionIds String[]   @db.ObjectId
+  questions   Question[] @relation(fields: [questionIds], references: [id])
+}
