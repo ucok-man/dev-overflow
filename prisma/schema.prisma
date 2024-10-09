@@ -50,6 +50,7 @@ model User {
 
 model Question {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  title     String
   content   String
   views     Int
   updatedAt DateTime @updatedAt
@@ -67,8 +68,8 @@ model Question {
   upvotedByIds String[] @db.ObjectId
   upvotedBy    User[]   @relation("upvotedQuestion", fields: [upvotedByIds], references: [id])
 
-  downvoteddByIds String[] @db.ObjectId
-  downvotedBy     User[]   @relation("downvotedQuestion", fields: [downvoteddByIds], references: [id])
+  downvotedByIds String[] @db.ObjectId
+  downvotedBy    User[]   @relation("downvotedQuestion", fields: [downvotedByIds], references: [id])
 
   answers Answer[] @relation("answer")
 }
@@ -88,12 +89,13 @@ model Answer {
   upvotedByIds String[] @db.ObjectId
   upvotedBy    User[]   @relation("upvotedAnswer", fields: [upvotedByIds], references: [id])
 
-  downvoteddByIds String[] @db.ObjectId
-  downvotedBy     User[]   @relation("downvotedAnswer", fields: [downvoteddByIds], references: [id])
+  downvotedByIds String[] @db.ObjectId
+  downvotedBy    User[]   @relation("downvotedAnswer", fields: [downvotedByIds], references: [id])
 }
 
 model Tag {
   id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
   description String
   updatedAt   DateTime @updatedAt
   createdAt   DateTime @default(now())
