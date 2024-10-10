@@ -4,7 +4,7 @@ import { SheetClose } from "@/components/ui/sheet";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { mobileLinks } from "./constant/mobile-links.constant";
+import { mobileLinks } from "../../../lib/constants/mobile-links.constant";
 
 export default function ContentItem() {
   const pathname = usePathname();

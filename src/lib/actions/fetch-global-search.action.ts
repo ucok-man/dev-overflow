@@ -1,4 +1,4 @@
-import { GlobalSearchResultType } from "@/components/navbar/global-search/global-search-result/types/global-search-result.type";
+import { GlobalSearchResultType } from "@/lib/types/global-search-result.type";
 import delay from "delay";
 
 export async function fetchGlobalSearch(

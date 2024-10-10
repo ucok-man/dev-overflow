@@ -3,7 +3,7 @@
 import { MenubarItem } from "@/components/ui/menubar";
 import Image from "next/image";
 import { Dispatch, SetStateAction } from "react";
-import { themes } from "./constants/theme.constant";
+import { themes } from "../../../lib/constants/theme.constant";
 
 type Props = {
   setTheme: Dispatch<SetStateAction<string>>;

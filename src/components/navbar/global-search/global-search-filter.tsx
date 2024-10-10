@@ -2,7 +2,7 @@
 
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import queryString from "query-string";
-import { searchFilters } from "./constant/search-filter.constant";
+import { searchFilters } from "../../../lib/constants/search-filter.constant";
 
 export default function GlobalSearchFilter() {
   const router = useRouter();

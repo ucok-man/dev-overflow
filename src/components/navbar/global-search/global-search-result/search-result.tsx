@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { GlobalSearchResultType } from "./types/global-search-result.type";
+import { GlobalSearchResultType } from "../../../../lib/types/global-search-result.type";
 
 type Props = {
   datas: GlobalSearchResultType[] | undefined;
