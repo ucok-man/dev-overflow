@@ -12,7 +12,7 @@ export default function GlobalSearchResult() {
   const { data, isRefetching } = useQuery<GlobalSearchResultType[]>({
     queryKey: ["global-search"],
     queryFn: () =>
-      fetchGlobalSearch(searchparams.get("global"), searchparams.get("type")),
+      fetchGlobalSearch(searchparams.get("qg"), searchparams.get("fg")),
     staleTime: 0,
     throwOnError: true,
   });

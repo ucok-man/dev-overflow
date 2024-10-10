@@ -15,8 +15,6 @@ export default function GlobalSearch() {
   const searchContainerRef = useRef<HTMLDivElement>(null);
   const client = useQueryClient();
 
-  // const query = searchparams.get("q");
-
   const [search, setSearch] = useState(/*query ||*/ "");
 
   useEffect(() => {
@@ -37,10 +35,10 @@ export default function GlobalSearch() {
     const debounce = setTimeout(() => {
       const query = queryString.parse(searchparams.toString());
       if (search) {
-        query["global"] = search;
+        query["qg"] = search;
       } else {
-        delete query["global"];
-        delete query["type"];
+        delete query["qg"];
+        delete query["fg"];
       }
 
       const url = queryString.stringifyUrl(

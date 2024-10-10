@@ -11,7 +11,7 @@ export default function GlobalSearchFilter() {
 
   const handleclick = (filter: string) => {
     const query = queryString.parse(searchparams.toString());
-    query["type"] = filter;
+    query["fg"] = filter;
 
     const url = queryString.stringifyUrl(
       { url: pathname, query },
@@ -29,7 +29,7 @@ export default function GlobalSearchFilter() {
             key={item.value}
             className={` light-border-2 small-medium rounded-2xl px-5 py-2 capitalize
             ${
-              searchparams.get("type") === item.value
+              searchparams.get("fg") === item.value
                 ? "bg-primary-500 text-light-900"
                 : "bg-light-700 text-dark-400 hover:text-primary-500 dark:bg-dark-500 dark:text-light-800 dark:hover:text-primary-500"
             }`}
