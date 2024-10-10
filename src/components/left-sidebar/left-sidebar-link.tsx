@@ -1,9 +1,9 @@
 "use client";
 
+import { sidebarLinks } from "@/lib/constants";
 import { useAuth } from "@clerk/nextjs";
 import Image from "next/image";
 import Link from "next/link";
-import { sidebarLinks } from "../../lib/constants/sidebar-link.constant";
 
 type Props = {
   isActive: boolean;

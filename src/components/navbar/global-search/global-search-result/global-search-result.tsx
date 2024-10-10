@@ -1,7 +1,7 @@
-import { fetchGlobalSearch } from "@/lib/actions/fetch-global-search.action";
+import { fetchGlobalSearch } from "@/lib/actions";
+import { GlobalSearchResultType } from "@/lib/types";
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
-import { GlobalSearchResultType } from "../../../../lib/types/global-search-result.type";
 import GlobalSearchFilter from "../global-search-filter";
 import SearchLoading from "./search-loading";
 import SearchResult from "./search-result";

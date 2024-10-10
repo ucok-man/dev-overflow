@@ -1,5 +1,5 @@
-import RenderTag from "@/components/shared/render-tag";
-import { fetchPopularTags } from "@/lib/actions/fetch-popular-tag.action";
+import { RenderTag } from "@/components/shared";
+import { fetchPopularTags } from "@/lib/actions";
 
 export default async function PopularTag() {
   const popularTags = await fetchPopularTags();

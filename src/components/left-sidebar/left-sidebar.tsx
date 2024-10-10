@@ -1,8 +1,8 @@
 "use client";
 
+import { sidebarLinks } from "@/lib/constants";
 import { matchroute } from "@/lib/utils";
 import { usePathname } from "next/navigation";
-import { sidebarLinks } from "../../lib/constants/sidebar-link.constant";
 import LeftSidebarAuthButton from "./left-sidebar-auth-button";
 import LeftSidebarLink from "./left-sidebar-link";
 

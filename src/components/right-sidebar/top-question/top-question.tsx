@@ -1,4 +1,4 @@
-import { fetchTopQeustion } from "@/lib/actions/fetch-top-question.action";
+import { fetchTopQeustion } from "@/lib/actions";
 import TopQuestionItem from "./top-question-item";
 
 export default async function TopQuestion() {

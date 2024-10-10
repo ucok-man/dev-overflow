@@ -1,10 +1,10 @@
 "use client";
 
 import { SheetClose } from "@/components/ui/sheet";
+import { mobileLinks } from "@/lib/constants";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { mobileLinks } from "../../../lib/constants/mobile-links.constant";
 
 export default function ContentItem() {
   const pathname = usePathname();
