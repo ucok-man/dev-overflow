@@ -15,10 +15,11 @@ export default function LocalSearchbarFilter<T extends readonly Filter[]>({
   filters,
   defaultVal,
 }: Props<T>) {
-  const [active, setActive] = useState(defaultVal);
   const searchparams = useSearchParams();
   const pathname = usePathname();
   const router = useRouter();
+
+  const [active, setActive] = useState(searchparams.get("fl") || defaultVal);
 
   const onClick = (value: string) => {
     const query = queryString.parse(searchparams.toString());
