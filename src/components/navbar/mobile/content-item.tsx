@@ -2,6 +2,7 @@
 
 import { SheetClose } from "@/components/ui/sheet";
 import { mobileLinks } from "@/lib/constants";
+import { matchroute } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -14,9 +15,7 @@ export default function ContentItem() {
       <SheetClose asChild>
         <section className="flex h-full flex-col gap-6 pt-16">
           {mobileLinks.map((item) => {
-            const active =
-              (pathname.includes(item.route) && item.route.length > 1) ||
-              pathname === item.route;
+            const active = matchroute(pathname, item.route);
 
             return (
               <SheetClose asChild key={item.route}>

@@ -18,11 +18,11 @@ export default function EditDeleteAction({ type, itemid }: Props) {
 
   const onClick = async () => {
     if (type === "question") {
-      // Delete question
+      // TODO: Delete action for questions
       return;
     }
 
-    // Delete answer
+    // TODO: delete action for answer
     return;
   };
 

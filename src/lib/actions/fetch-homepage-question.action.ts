@@ -67,7 +67,7 @@ export async function fetchHomePageQuestion(
   }
 
   if (params.filter === HomepageFilterValue.recommended) {
-    // TODO: DO Implementation
+    // TODO: Do real implementation for recommended fetching
     return null;
   }
 

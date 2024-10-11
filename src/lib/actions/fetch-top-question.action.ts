@@ -1,7 +1,7 @@
 import { Question } from "@prisma/client";
 
+// TODO: Do real implementation
 export async function fetchTopQeustion(): Promise<Question[]> {
-  // TODO: do implementation
   return [
     {
       id: "1",

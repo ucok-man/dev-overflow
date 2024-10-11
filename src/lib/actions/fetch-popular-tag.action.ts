@@ -1,7 +1,7 @@
 import { Tag } from "@prisma/client";
 
+// TODO: Do real implementation
 export async function fetchPopularTags(): Promise<Tag[]> {
-  // TODO: do implementation
   return [
     {
       id: "tag1",
