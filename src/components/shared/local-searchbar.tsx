@@ -24,11 +24,24 @@ export default function LocalSearchbar({
   const searchparams = useSearchParams();
   const pathname = usePathname();
   const router = useRouter();
+
+  const [prevSearch, setPrevSearch] = useState("");
   const [search, setSearch] = useState(searchparams.get("ql") || "");
+
+  console.log({
+    search,
+    prevSearch,
+  });
 
   useEffect(() => {
     const debounce = setTimeout(() => {
       const query = queryString.parse(searchparams.toString());
+
+      // always delete the pagination when writing new content in searchbox
+      if (prevSearch !== search) {
+        delete query["page"];
+      }
+
       if (search) {
         query["ql"] = search;
       }
@@ -45,6 +58,8 @@ export default function LocalSearchbar({
       router.push(url, { scroll: false });
     }, 300);
 
+    // update setPrevSearch before returning
+    setPrevSearch(search);
     return () => clearTimeout(debounce);
   }, [pathname, router, search, searchparams, route]);
 
@@ -66,7 +81,9 @@ export default function LocalSearchbar({
         type="text"
         placeholder={placeholder}
         value={search}
-        onChange={(e) => setSearch(e.target.value)}
+        onChange={(e) => {
+          setSearch(e.target.value);
+        }}
         className="paragraph-regular no-focus placeholder text-dark400_light700 border-none bg-transparent shadow-none outline-none"
       />
 

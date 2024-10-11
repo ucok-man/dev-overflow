@@ -5,6 +5,7 @@ import {
   LocalSearchbarFilter,
   MobileLocalSearchbarFilter,
   NoResult,
+  Pagination,
   QuestionCard,
 } from "@/components";
 import { fetchHomePageQuestion } from "@/lib/actions";
@@ -18,8 +19,9 @@ export const metadata: Metadata = {
 
 type Props = {
   searchParams: {
-    ql: string;
-    fl: string;
+    ql?: string;
+    fl?: string;
+    page?: string;
   };
 };
 
@@ -29,6 +31,7 @@ export default async function HomePage({ searchParams }: Props) {
   const data = await fetchHomePageQuestion({
     filter: HomepageFilterValue[searchParams.fl as HomepageFilterValue],
     searchquery: searchParams.ql,
+    page: Number(searchParams.page) || 1,
     userId: userId,
   });
 
@@ -76,7 +79,12 @@ export default async function HomePage({ searchParams }: Props) {
         )}
       </div>
       {/* PAGINATION */}
-      [PAGINATION]
+      <div className="mt-10">
+        <Pagination
+          page={Number(searchParams.page) || 1}
+          isnext={data?.isNext || false}
+        />
+      </div>
     </div>
   );
 }

@@ -19,6 +19,16 @@ export async function fetchHomePageQuestion(
   if (params.page === undefined) params.page = 1;
   if (params.pageSize === undefined) params.pageSize = 10;
 
+  // check for filter
+  const safefilter = Object.values(HomepageFilterValue);
+  let isSafe = false;
+  for (const key in safefilter) {
+    if (params.filter == safefilter[key]) {
+      isSafe = true;
+    }
+  }
+  if (!isSafe) return null;
+
   // create query builder
   const query: PrismaQueryFindMany<"question"> = {};
   query.where = {}; // initialize 'where' object, so it must be defined
