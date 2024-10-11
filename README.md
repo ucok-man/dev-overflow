@@ -1,36 +1,43 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+## DevOverflow
+
+---
+
+**DevOverflow** is a [Stack Overflow](https://stackoverflow.com/) clone build with Next.js that allows users to ask and answer programming questions. The platform is designed to be community-driven, with features such as user profiles, question tagging, and search functionality.
 
 ## Getting Started
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+### Prerequisites
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- Node.js (>=20.17.0)
+- Npm (>=10.8.2)
+- Clerk account
+- Mongodb with configured clusters
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Installation
 
-## Learn More
+1.  Clone the repository: `git clone https://github.com/your-username/dev-overflow.git`
+2.  Install dependencies: `npm install`
+3.  Create `.env` file in the root of your project. Fill the environment with the value on `env.example` file
+4.  Run the seeded data if you needed: `npx prisma db seed`
+5.  Start the development server: `npm run dev`
+6.  Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-To learn more about Next.js, take a look at the following resources:
+## Technology Stack
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- Next.js for rendering framework
+- Tailwind and Shadcn for styling
+- Clerk For authentication
+- Prisma for orm database
+- Mongodb for the database
 
-## Deploy on Vercel
+## TODO
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- [ ] Fetching data from database
