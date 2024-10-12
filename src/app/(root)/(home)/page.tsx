@@ -1,5 +1,4 @@
 import {
-  homepageFilters,
   HomePageHeader,
   LocalSearchbar,
   LocalSearchbarFilter,
@@ -9,6 +8,7 @@ import {
   QuestionCard,
 } from "@/components";
 import { fetchHomePageQuestion } from "@/lib/actions";
+import { homepageFilters } from "@/lib/constants";
 import { HomepageFilterValue } from "@/lib/enums";
 import { auth } from "@clerk/nextjs/server";
 import { Metadata } from "next";
