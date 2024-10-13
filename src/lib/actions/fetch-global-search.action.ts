@@ -1,3 +1,5 @@
+"use server";
+
 import { GlobalSearchResultType } from "@/lib/types";
 import delay from "delay";
 

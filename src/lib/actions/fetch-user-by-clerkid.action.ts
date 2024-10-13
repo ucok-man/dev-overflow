@@ -1,3 +1,5 @@
+"use server";
+
 import prisma from "../database/prisma-client";
 
 export async function fetchUserByClerkId({ clerkid }: { clerkid: string }) {

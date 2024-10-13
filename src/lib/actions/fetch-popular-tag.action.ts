@@ -1,3 +1,5 @@
+"use server";
+
 import { Tag } from "@prisma/client";
 
 // TODO: Do real implementation

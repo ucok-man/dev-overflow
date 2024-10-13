@@ -1,3 +1,5 @@
+"use server";
+
 import { Question } from "@prisma/client";
 
 // TODO: Do real implementation

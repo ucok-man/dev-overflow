@@ -1,3 +1,5 @@
+"use server";
+
 import prisma from "../database/prisma-client";
 import { HomepageFilterValue } from "../enums";
 import { PrismaQueryFindMany } from "../types";

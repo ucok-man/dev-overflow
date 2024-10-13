@@ -2,8 +2,10 @@
 
 import { Button } from "@/components/ui/button";
 import { Form, FormField } from "@/components/ui/form";
+import { postCreateQuestion } from "@/lib/actions/post-qeustion.action";
 import { QuestionFormValidationSchema } from "@/lib/validation-schema/question-form.validation.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -22,6 +24,8 @@ type Props =
     };
 
 export default function QuestionForm(props: Props) {
+  const router = useRouter();
+  const pathname = usePathname();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const form = useForm<z.infer<typeof QuestionFormValidationSchema>>({
     resolver: zodResolver(QuestionFormValidationSchema),
@@ -42,11 +46,17 @@ export default function QuestionForm(props: Props) {
       }
 
       if (props.type === "create") {
+        await postCreateQuestion({
+          title: values.title,
+          content: values.explanation,
+          tags: values.tags,
+          createdById: props.uid,
+          revalidatedPath: pathname,
+        });
+        router.push("/");
       }
-
-      console.log(values);
     } catch (error) {
-      console.log(error);
+      throw error;
     } finally {
       setIsSubmitting(false);
     }
