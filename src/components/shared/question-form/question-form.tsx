@@ -2,8 +2,8 @@
 
 import { Button } from "@/components/ui/button";
 import { Form, FormField } from "@/components/ui/form";
-import { postCreateQuestion } from "@/lib/actions/post-qeustion.action";
-import { QuestionFormValidationSchema } from "@/lib/validation-schema/question-form.validation.schema";
+import { postCreateQuestion } from "@/lib/actions";
+import { QuestionFormValidationSchema } from "@/lib/validation-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";

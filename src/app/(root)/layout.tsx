@@ -1,4 +1,5 @@
 import { LeftSidebar, Navbar, RightSidebar } from "@/components";
+import { Toaster } from "@/components/ui/toaster";
 import React from "react";
 
 type Props = {
@@ -16,7 +17,7 @@ export default function Layout({ children }: Props) {
         </section>
         <RightSidebar />
       </div>
-      [TOASTER]
+      <Toaster />
     </main>
   );
 }

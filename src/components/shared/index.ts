@@ -6,4 +6,6 @@ export { default as MobileLocalSearchbarFilter } from "./mobile-local-search-fil
 export { default as NoResult } from "./no-result";
 export { default as Pagination } from "./pagination";
 export { default as QuestionCard } from "./question-card";
+export { default as QuestionForm } from "./question-form/question-form";
 export { default as RenderTag } from "./render-tag";
+export { default as Votes } from "./votes";
