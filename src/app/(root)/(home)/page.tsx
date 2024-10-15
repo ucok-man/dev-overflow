@@ -1,15 +1,15 @@
 import {
+  Filter,
   HomePageHeader,
   LocalSearchbar,
-  LocalSearchbarFilter,
-  MobileLocalSearchbarFilter,
+  MobileFilter,
   NoResult,
   Pagination,
   QuestionCard,
 } from "@/components";
 import { fetchHomePageQuestion } from "@/lib/actions";
-import { homepageFilters } from "@/lib/constants";
-import { HomepageFilterValue } from "@/lib/enums";
+import { QUESTION_QUERY_FILTER } from "@/lib/constants";
+import { QuestionQueryFilterValue } from "@/lib/enums";
 import { auth } from "@clerk/nextjs/server";
 import { Metadata } from "next";
 
@@ -29,7 +29,8 @@ export default async function HomePage({ searchParams }: Props) {
   const { userId } = auth();
 
   const data = await fetchHomePageQuestion({
-    filter: HomepageFilterValue[searchParams.fl as HomepageFilterValue],
+    filter:
+      QuestionQueryFilterValue[searchParams.fl as QuestionQueryFilterValue],
     searchquery: searchParams.ql,
     page: Number(searchParams.page) || 1,
     userId: userId,
@@ -49,16 +50,18 @@ export default async function HomePage({ searchParams }: Props) {
           containerClasses="flex-1"
         />
 
-        <MobileLocalSearchbarFilter
-          filters={homepageFilters}
-          defaultVal={HomepageFilterValue.recommended}
+        <MobileFilter
+          filters={QUESTION_QUERY_FILTER}
+          defaultVal={QuestionQueryFilterValue.recommended}
           trigerClasess="min-h-[56px] sm:min-w-[170px]"
-          containerClasses="hidden max-md:flex"
+          showWhen="max-md:flex"
+          flexgrow={false}
         />
       </div>
-      <LocalSearchbarFilter
-        filters={homepageFilters}
-        defaultVal={HomepageFilterValue.recommended}
+      <Filter
+        filters={QUESTION_QUERY_FILTER}
+        defaultVal={QuestionQueryFilterValue.recommended}
+        showWhen="md:flex"
       />
       {/* CONTENT */}
       <div className="mt-10 flex w-full flex-col gap-6">

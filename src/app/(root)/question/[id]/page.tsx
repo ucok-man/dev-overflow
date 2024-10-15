@@ -1,7 +1,14 @@
-import { Metric, RenderTag, Votes } from "@/components";
-import ParseHTML from "@/components/shared/parse-html.action";
+import {
+  AllAnswer,
+  CreateAnswerBox,
+  Metric,
+  RenderTag,
+  Votes,
+} from "@/components";
+import ParseHTML from "@/components/shared/parse-html";
 import { fetchUserByClerkId } from "@/lib/actions";
 import { fetchQuestionById } from "@/lib/actions/fetch-qeustion-by-id.action";
+import { AnswerQueryFilterValue } from "@/lib/enums";
 import { formatNumber, formatTimestamp } from "@/lib/utils";
 import { auth } from "@clerk/nextjs/server";
 import { Tag } from "@prisma/client";
@@ -10,9 +17,16 @@ import Link from "next/link";
 
 type Props = {
   params: { id: string };
+  searchParams: {
+    fl?: string;
+    page?: string;
+  };
 };
 
-export default async function QuestionDetailPage({ params }: Props) {
+export default async function QuestionDetailPage({
+  params,
+  searchParams,
+}: Props) {
   const clerkId = auth().userId as string;
   const user = await fetchUserByClerkId({ clerkid: clerkId });
   const qeustion = await fetchQuestionById({ qid: params.id });
@@ -101,6 +115,20 @@ export default async function QuestionDetailPage({ params }: Props) {
       </div>
 
       {/* All Answer */}
+      <AllAnswer
+        qid={qeustion.id}
+        cuid={user.id}
+        totalAnswer={qeustion.answers.length}
+        filter={searchParams?.fl || AnswerQueryFilterValue.HighestUpvotes}
+        page={Number(searchParams?.page) || 1}
+      />
+
+      {/* Creating answer box */}
+      <CreateAnswerBox
+        qid={qeustion.id}
+        createdById={user.id}
+        questionForAi={qeustion.content}
+      />
     </div>
   );
 }

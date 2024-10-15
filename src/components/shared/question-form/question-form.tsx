@@ -36,12 +36,12 @@ export default function QuestionForm(props: Props) {
     },
   });
 
-  // TODO: do data fetching
   async function onSubmit(
     values: z.infer<typeof QuestionFormValidationSchema>
   ) {
     try {
       setIsSubmitting(true);
+      // TODO: do the implementation
       if (props.type === "edit") {
       }
 

@@ -1,7 +1,7 @@
 "use client";
 
 import { MenubarItem } from "@/components/ui/menubar";
-import { themes } from "@/lib/constants";
+import { THEME_LIST } from "@/lib/constants";
 import Image from "next/image";
 import { Dispatch, SetStateAction } from "react";
 
@@ -11,7 +11,7 @@ type Props = {
 };
 
 export default function ContentItem({ setTheme, theme }: Props) {
-  return themes.map((item) => (
+  return THEME_LIST.map((item) => (
     <MenubarItem
       key={item.value}
       className="flex items-center gap-4 px-2.5 py-2 dark:focus:bg-dark-400"

@@ -1,7 +1,11 @@
 "use client";
 
 import { useToast } from "@/hooks/use-toast";
-import { postToggleSaveQuestion, postToggleVoteQeustion } from "@/lib/actions";
+import {
+  postToggleSaveQuestion,
+  postToggleVoteAnswer,
+  postToggleVoteQeustion,
+} from "@/lib/actions";
 import { formatNumber } from "@/lib/utils";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
@@ -48,12 +52,26 @@ export default function Votes(props: Props) {
         hasDownvoted: props.hasdownVoted,
         revalidatePath: pathname,
       });
+    }
 
-      return toast({
-        title: `${action} ${!props.hasupVoted ? "Successful" : "Removed"}`,
-        variant: !props.hasupVoted ? "default" : "destructive",
+    if (props.type === "answer") {
+      await postToggleVoteAnswer({
+        qid: props.itemId,
+        action: action,
+        cuid: props.cuid,
+        hasUpvoted: props.hasupVoted,
+        hasDownvoted: props.hasdownVoted,
+        revalidatePath: pathname,
       });
     }
+
+    return toast({
+      title: `${action} ${
+        !props.hasupVoted && !props.hasdownVoted ? "Successful" : "Removed"
+      }`,
+      variant:
+        !props.hasupVoted && !props.hasdownVoted ? "default" : "destructive",
+    });
   };
 
   const handlesave = async () => {

@@ -6,19 +6,15 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { QuestionFormValidationSchema } from "@/lib/validation-schema";
 import { ControllerRenderProps } from "react-hook-form";
-
-type ExplanationField = ControllerRenderProps<
-  {
-    title: string;
-    explanation: string;
-    tags: string[];
-  },
-  "title"
->;
+import { z } from "zod";
 
 type Props = {
-  field: ExplanationField;
+  field: ControllerRenderProps<
+    z.infer<typeof QuestionFormValidationSchema>,
+    "title"
+  >;
 };
 
 export default function TitleFormControl({ field }: Props) {

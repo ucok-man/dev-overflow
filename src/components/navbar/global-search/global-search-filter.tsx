@@ -1,6 +1,6 @@
 "use client";
 
-import { searchFilters } from "@/lib/constants";
+import { GLOBAL_SEARCH_FILTER } from "@/lib/constants";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import queryString from "query-string";
 
@@ -24,7 +24,7 @@ export default function GlobalSearchFilter() {
     <div className="flex items-center gap-5 px-5">
       <p className="text-dark400_light900 body-medium">Type: </p>
       <div className="flex gap-3">
-        {searchFilters.map((item) => (
+        {GLOBAL_SEARCH_FILTER.map((item) => (
           <button
             key={item.value}
             className={` light-border-2 small-medium rounded-2xl px-5 py-2 capitalize

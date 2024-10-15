@@ -28,11 +28,6 @@ export default function LocalSearchbar({
   const [prevSearch, setPrevSearch] = useState("");
   const [search, setSearch] = useState(searchparams.get("ql") || "");
 
-  console.log({
-    search,
-    prevSearch,
-  });
-
   useEffect(() => {
     const debounce = setTimeout(() => {
       const query = queryString.parse(searchparams.toString());

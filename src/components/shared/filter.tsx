@@ -1,19 +1,21 @@
 "use client";
 
-import { Filter } from "@/lib/types";
+import { FilterType } from "@/lib/types";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import queryString from "query-string";
 import { useState } from "react";
 import { Button } from "../ui/button";
 
-type Props<T extends readonly Filter[]> = {
+type Props<T extends readonly FilterType[]> = {
   filters: T;
   defaultVal: T[number]["value"];
+  showWhen: "sm:flex" | "md:flex" | "lg:flex" | "xl:flex" | "2xl:flex";
 };
 
-export default function LocalSearchbarFilter<T extends readonly Filter[]>({
+export default function Filter<T extends readonly FilterType[]>({
   filters,
   defaultVal,
+  showWhen,
 }: Props<T>) {
   const searchparams = useSearchParams();
   const pathname = usePathname();
@@ -36,7 +38,7 @@ export default function LocalSearchbarFilter<T extends readonly Filter[]>({
   };
 
   return (
-    <div className="mt-10 hidden flex-wrap gap-3 md:flex">
+    <div className={`mt-10 hidden flex-wrap gap-3 ${showWhen}`}>
       {filters.map((item) => (
         <Button
           key={item.value}

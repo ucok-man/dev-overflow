@@ -73,6 +73,7 @@ code {
 .markdown pre {
   display: grid;
   width: 100%;
+  @apply bg-light-800 text-dark-400 dark:bg-dark-400 dark:text-light-800;
 }
 
 .markdown pre code {

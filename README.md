@@ -40,4 +40,5 @@
 
 ---
 
-- [ ] Fetching data from database
+- [ ] Completing implementation of action function
+- [ ] Fix bug fecth all answer on lowest upvoted

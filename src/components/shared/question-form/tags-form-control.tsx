@@ -12,17 +12,11 @@ import Image from "next/image";
 import { ControllerRenderProps, useForm } from "react-hook-form";
 import { z } from "zod";
 
-type TagField = ControllerRenderProps<
-  {
-    title: string;
-    explanation: string;
-    tags: string[];
-  },
-  "tags"
->;
-
 type Props = {
-  field: TagField;
+  field: ControllerRenderProps<
+    z.infer<typeof QuestionFormValidationSchema>,
+    "tags"
+  >;
 
   type: "edit" | "create";
   form: ReturnType<
@@ -33,7 +27,7 @@ type Props = {
 export default function TagsFormControl({ field, type, form }: Props) {
   const handleInputKeyDown = (
     e: React.KeyboardEvent<HTMLInputElement>,
-    field: TagField
+    field: Props["field"]
   ) => {
     if (e.key === "Enter" && field.name === "tags") {
       e.preventDefault();
@@ -60,7 +54,7 @@ export default function TagsFormControl({ field, type, form }: Props) {
     }
   };
 
-  const handleTagRemove = (tag: string, field: TagField) => {
+  const handleTagRemove = (tag: string, field: Props["field"]) => {
     const newTags = field.value.filter((t: string) => t !== tag);
     form.setValue("tags", newTags);
   };

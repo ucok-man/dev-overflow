@@ -1,4 +1,4 @@
-export const mobileLinks = [
+export const MOBILE_LINKS = [
   {
     imgURL: "/assets/icons/home.svg",
     route: "/",

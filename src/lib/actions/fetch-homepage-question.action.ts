@@ -1,12 +1,12 @@
 "use server";
 
 import prisma from "../database/prisma-client";
-import { HomepageFilterValue } from "../enums";
+import { QuestionQueryFilterValue } from "../enums";
 import { PrismaQueryFindMany } from "../types";
 
 export type FetchHomePageQuestionParam = {
   searchquery?: string;
-  filter?: HomepageFilterValue;
+  filter?: QuestionQueryFilterValue;
   page?: number;
   pageSize?: number;
   userId: string | null;
@@ -17,12 +17,12 @@ export async function fetchHomePageQuestion(
 ) {
   // fill the default value
   if (params.filter === undefined)
-    params.filter = HomepageFilterValue.recommended;
+    params.filter = QuestionQueryFilterValue.recommended;
   if (params.page === undefined) params.page = 1;
   if (params.pageSize === undefined) params.pageSize = 10;
 
   // check for filter
-  const safefilter = Object.values(HomepageFilterValue);
+  const safefilter = Object.values(QuestionQueryFilterValue);
   let isSafe = false;
   for (const key in safefilter) {
     if (params.filter == safefilter[key]) {
@@ -38,7 +38,7 @@ export async function fetchHomePageQuestion(
 
   // make branch for 'filter' recommended and other.
   // it will treat differently
-  if (params.filter !== HomepageFilterValue.recommended) {
+  if (params.filter !== QuestionQueryFilterValue.recommended) {
     // if search query is defined then search based on that
     if (params.searchquery) {
       query.where.OR = [
@@ -55,20 +55,20 @@ export async function fetchHomePageQuestion(
       ];
     }
 
-    if (params.filter === HomepageFilterValue.unanswered) {
+    if (params.filter === QuestionQueryFilterValue.unanswered) {
       query.where.AND = { answers: { none: {} } };
     }
 
-    if (params.filter === HomepageFilterValue.frequent) {
+    if (params.filter === QuestionQueryFilterValue.frequent) {
       query.orderBy.views = "desc";
     }
 
-    if (params.filter === HomepageFilterValue.newest) {
+    if (params.filter === QuestionQueryFilterValue.newest) {
       query.orderBy.createdAt = "desc";
     }
   }
 
-  if (params.filter === HomepageFilterValue.recommended) {
+  if (params.filter === QuestionQueryFilterValue.recommended) {
     // TODO: Do real implementation for recommended fetching
     return null;
   }

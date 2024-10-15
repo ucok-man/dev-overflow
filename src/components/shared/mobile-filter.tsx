@@ -1,6 +1,6 @@
 "use client";
 
-import { Filter } from "@/lib/types";
+import { FilterType } from "@/lib/types";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import queryString from "query-string";
 import {
@@ -12,18 +12,25 @@ import {
   SelectValue,
 } from "../ui/select";
 
-type Props<T extends readonly Filter[]> = {
+type Props<T extends readonly FilterType[]> = {
   filters: T;
   defaultVal: T[number]["value"];
   trigerClasess?: string;
-  containerClasses?: string;
+  showWhen:
+    | "max-sm:flex"
+    | "max-md:flex"
+    | "max-lg:flex"
+    | "max-xl:flex"
+    | "max-2xl:flex";
+  flexgrow: boolean;
 };
 
-export default function MobileLocalSearchFilter<T extends readonly Filter[]>({
+export default function MobileFilter<T extends readonly FilterType[]>({
   filters,
   defaultVal,
   trigerClasess,
-  containerClasses,
+  showWhen,
+  flexgrow,
 }: Props<T>) {
   const searchparams = useSearchParams();
   const pathname = usePathname();
@@ -42,7 +49,7 @@ export default function MobileLocalSearchFilter<T extends readonly Filter[]>({
   };
 
   return (
-    <div className={`relative ${containerClasses}`}>
+    <div className={`relative hidden ${showWhen} ${flexgrow ? "grow" : ""}`}>
       <Select
         onValueChange={onChange}
         defaultValue={searchparams.get("fl") || defaultVal}

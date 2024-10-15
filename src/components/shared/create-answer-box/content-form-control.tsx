@@ -1,34 +1,23 @@
-import {
-  FormControl,
-  FormDescription,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { QuestionFormValidationSchema } from "@/lib/validation-schema";
+import { AnswerFormValidationSchema } from "@/lib/validation-schema";
 import { Editor } from "@tinymce/tinymce-react";
 import { useTheme } from "next-themes";
-import { useRef } from "react";
+import { MutableRefObject } from "react";
 import { ControllerRenderProps } from "react-hook-form";
 import { z } from "zod";
+import { FormControl, FormItem, FormMessage } from "../../ui/form";
 
 type Props = {
   field: ControllerRenderProps<
-    z.infer<typeof QuestionFormValidationSchema>,
-    "explanation"
+    z.infer<typeof AnswerFormValidationSchema>,
+    "content"
   >;
+  editorRef: MutableRefObject<Editor | undefined>;
 };
-
-export default function ExplanationFormControl({ field }: Props) {
-  const editorRef = useRef<Editor>();
+export default function ContentFormControl({ field, editorRef }: Props) {
   const { resolvedTheme } = useTheme();
 
   return (
     <FormItem className="flex w-full flex-col gap-3">
-      <FormLabel className="paragraph-semibold text-dark400_light800">
-        Detailed explanation of your problem
-        <span className="text-primary-500">*</span>
-      </FormLabel>
       <FormControl className="mt-3.5">
         <Editor
           key={resolvedTheme}
@@ -38,8 +27,6 @@ export default function ExplanationFormControl({ field }: Props) {
           }}
           onBlur={field.onBlur}
           onEditorChange={(content) => field.onChange(content)}
-          // TODO: fill missing value in case edit question
-          initialValue={""}
           init={{
             height: 350,
             menubar: false,
@@ -70,10 +57,6 @@ export default function ExplanationFormControl({ field }: Props) {
           }}
         />
       </FormControl>
-      <FormDescription className="body-regular mt-2.5 text-light-500">
-        Introduce the problem and expand on what you put in the title. Minimum
-        20 characters.
-      </FormDescription>
       <FormMessage className="text-red-500" />
     </FormItem>
   );

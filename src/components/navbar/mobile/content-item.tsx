@@ -1,7 +1,7 @@
 "use client";
 
 import { SheetClose } from "@/components/ui/sheet";
-import { mobileLinks } from "@/lib/constants";
+import { MOBILE_LINKS } from "@/lib/constants";
 import { matchroute } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
@@ -14,7 +14,7 @@ export default function ContentItem() {
     <div className="no-scrollbar flex grow flex-col justify-between overflow-y-auto">
       <SheetClose asChild>
         <section className="flex h-full flex-col gap-6 pt-16">
-          {mobileLinks.map((item) => {
+          {MOBILE_LINKS.map((item) => {
             const active = matchroute(pathname, item.route);
 
             return (

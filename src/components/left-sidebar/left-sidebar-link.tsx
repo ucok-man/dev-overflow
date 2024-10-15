@@ -1,13 +1,13 @@
 "use client";
 
-import { sidebarLinks } from "@/lib/constants";
+import { SIDEBAR_LINKS } from "@/lib/constants";
 import { useAuth } from "@clerk/nextjs";
 import Image from "next/image";
 import Link from "next/link";
 
 type Props = {
   isActive: boolean;
-  item: (typeof sidebarLinks)[number];
+  item: (typeof SIDEBAR_LINKS)[number];
 };
 
 export default function LeftSidebarLink({ isActive, item }: Props) {
