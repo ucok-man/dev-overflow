@@ -17,9 +17,10 @@ type Props = {
     z.infer<typeof QuestionFormValidationSchema>,
     "explanation"
   >;
+  initialValue?: string;
 };
 
-export default function ExplanationFormControl({ field }: Props) {
+export default function ExplanationFormControl({ field, initialValue }: Props) {
   const editorRef = useRef<Editor>();
   const { resolvedTheme } = useTheme();
 
@@ -38,8 +39,7 @@ export default function ExplanationFormControl({ field }: Props) {
           }}
           onBlur={field.onBlur}
           onEditorChange={(content) => field.onChange(content)}
-          // TODO: fill missing value in case edit question
-          initialValue={""}
+          initialValue={initialValue}
           init={{
             height: 350,
             menubar: false,

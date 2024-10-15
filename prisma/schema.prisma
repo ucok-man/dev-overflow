@@ -71,7 +71,7 @@ model Question {
   downvotedByIds String[] @db.ObjectId
   downvotedBy    User[]   @relation("downvotedQuestion", fields: [downvotedByIds], references: [id])
 
-  answers Answer[] @relation("answer")
+  answers Answer[] @relation("QuestionAnswer")
 }
 
 model Answer {
@@ -84,7 +84,7 @@ model Answer {
   createdBy   User   @relation("createdAnswerBy", fields: [createdById], references: [id])
 
   questionId String   @db.ObjectId
-  question   Question @relation("answer", fields: [questionId], references: [id])
+  question   Question @relation("QuestionAnswer", fields: [questionId], references: [id], onDelete: Cascade)
 
   upvotedByIds String[] @db.ObjectId
   upvotedBy    User[]   @relation("upvotedAnswer", fields: [upvotedByIds], references: [id])

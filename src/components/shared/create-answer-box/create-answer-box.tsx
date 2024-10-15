@@ -35,7 +35,6 @@ export default function CreateAnswerBox(props: Props) {
     },
   });
 
-  // TODO: do implementation
   const handleGenerateAI = async () => {
     setIsSubmittingAI(true);
 
@@ -75,7 +74,6 @@ export default function CreateAnswerBox(props: Props) {
     }
   };
 
-  // TODO: do implementation
   const handleOnSubmit = async (
     values: z.infer<typeof AnswerFormValidationSchema>
   ) => {

@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { Form, FormField } from "@/components/ui/form";
 import { postCreateQuestion } from "@/lib/actions";
+import { postEditQuestion } from "@/lib/actions/post-edit-question.action";
 import { QuestionFormValidationSchema } from "@/lib/validation-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { usePathname, useRouter } from "next/navigation";
@@ -20,19 +21,21 @@ type Props =
     }
   | {
       type: "edit";
-      questionDetails: string;
+      schema: z.infer<typeof QuestionFormValidationSchema>;
+      qid: string;
     };
 
 export default function QuestionForm(props: Props) {
   const router = useRouter();
   const pathname = usePathname();
   const [isSubmitting, setIsSubmitting] = useState(false);
+
   const form = useForm<z.infer<typeof QuestionFormValidationSchema>>({
     resolver: zodResolver(QuestionFormValidationSchema),
     defaultValues: {
-      title: "",
-      explanation: "",
-      tags: [],
+      title: (props.type === "edit" && props.schema.title) || "",
+      explanation: (props.type === "edit" && props.schema.explanation) || "",
+      tags: (props.type === "edit" && props.schema.tags) || [],
     },
   });
 
@@ -41,8 +44,16 @@ export default function QuestionForm(props: Props) {
   ) {
     try {
       setIsSubmitting(true);
-      // TODO: do the implementation
       if (props.type === "edit") {
+        await postEditQuestion({
+          qid: props.qid,
+          content: props.schema.explanation,
+          title: props.schema.title,
+          tags: props.schema.tags,
+          revalidatePath: pathname,
+        });
+
+        router.push(`/question/${props.qid}`);
       }
 
       if (props.type === "create") {
@@ -79,7 +90,14 @@ export default function QuestionForm(props: Props) {
         <FormField
           control={form.control}
           name="explanation"
-          render={(arg) => <ExplanationFormControl field={arg.field} />}
+          render={(arg) => (
+            <ExplanationFormControl
+              field={arg.field}
+              initialValue={
+                props.type === "edit" ? props.schema.explanation : ""
+              }
+            />
+          )}
         />
 
         {/* Form Control tags */}

@@ -28,11 +28,11 @@ type Props = {
     views: number;
     createdAt: Date;
   };
-  clerkId?: string | null;
+  cuid?: string | null;
 };
 
-export default function QuestionCard({ question, clerkId }: Props) {
-  const showActionButtons = clerkId && clerkId === question.createdBy.clerkId;
+export default function QuestionCard({ question, cuid }: Props) {
+  const showActionButtons = cuid && cuid === question.createdBy.id;
 
   return (
     <div className="card-wrapper rounded-[10px] p-9 sm:px-11">
@@ -50,7 +50,11 @@ export default function QuestionCard({ question, clerkId }: Props) {
 
         <SignedIn>
           {showActionButtons && (
-            <EditDeleteAction type="question" itemid={question.id} />
+            <EditDeleteAction
+              type="question"
+              itemid={question.id}
+              createdByid={cuid}
+            />
           )}
         </SignedIn>
       </div>

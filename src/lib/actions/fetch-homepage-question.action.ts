@@ -9,7 +9,7 @@ export type FetchHomePageQuestionParam = {
   filter?: QuestionQueryFilterValue;
   page?: number;
   pageSize?: number;
-  userId: string | null;
+  cuid?: string;
 };
 
 export async function fetchHomePageQuestion(

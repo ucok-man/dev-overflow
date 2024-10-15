@@ -7,10 +7,11 @@ import {
   Pagination,
   QuestionCard,
 } from "@/components";
-import { fetchHomePageQuestion } from "@/lib/actions";
+import { fetchHomePageQuestion, fetchUserByClerkId } from "@/lib/actions";
 import { QUESTION_QUERY_FILTER } from "@/lib/constants";
 import { QuestionQueryFilterValue } from "@/lib/enums";
 import { auth } from "@clerk/nextjs/server";
+import { User } from "@prisma/client";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -26,14 +27,19 @@ type Props = {
 };
 
 export default async function HomePage({ searchParams }: Props) {
-  const { userId } = auth();
+  const clerkid = auth().userId;
+
+  let loginuser: User | undefined = undefined;
+  if (clerkid) {
+    loginuser = await fetchUserByClerkId({ clerkid });
+  }
 
   const data = await fetchHomePageQuestion({
     filter:
       QuestionQueryFilterValue[searchParams.fl as QuestionQueryFilterValue],
     searchquery: searchParams.ql,
     page: Number(searchParams.page) || 1,
-    userId: userId,
+    cuid: loginuser ? loginuser.id : undefined,
   });
 
   return (
@@ -76,7 +82,11 @@ export default async function HomePage({ searchParams }: Props) {
         {data && data.questions.length > 0 && (
           <div>
             {data.questions.map((question) => (
-              <QuestionCard key={question.id} question={question} />
+              <QuestionCard
+                key={question.id}
+                question={question}
+                cuid={loginuser?.id}
+              />
             ))}
           </div>
         )}
