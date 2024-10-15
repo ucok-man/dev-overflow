@@ -3,18 +3,16 @@
 import { revalidatePath } from "next/cache";
 import prisma from "../database/prisma-client";
 
-type PostDeleteQuestionParams = {
-  qid: string;
-  createdById: string;
+type PostDeleteAnswerParams = {
+  aid: string;
   revalidatePath?: string;
 };
 
-export async function postDeleteQuestion(params: PostDeleteQuestionParams) {
+export async function postDeleteAnswer(params: PostDeleteAnswerParams) {
   try {
-    await prisma.question.delete({
+    await prisma.answer.delete({
       where: {
-        id: params.qid,
-        createdById: params.createdById,
+        id: params.aid,
       },
     });
 
@@ -22,7 +20,7 @@ export async function postDeleteQuestion(params: PostDeleteQuestionParams) {
       revalidatePath(params.revalidatePath);
     }
   } catch (error) {
-    console.log(`error post delete question: ${error}`);
+    console.log(`error post delete answer: ${error}`);
     throw error;
   }
 }

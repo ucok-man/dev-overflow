@@ -1,16 +1,15 @@
 "use client";
 
-import { postDeleteQuestion } from "@/lib/actions/post-delete-question";
+import { postDeleteAnswer, postDeleteQuestion } from "@/lib/actions";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 
 type Props = {
   type: "question" | "answer";
   itemid: string;
-  createdByid: string;
 };
 
-export default function EditDeleteAction({ type, itemid, createdByid }: Props) {
+export default function EditDeleteAction({ type, itemid }: Props) {
   const pathname = usePathname();
   const router = useRouter();
 
@@ -21,15 +20,15 @@ export default function EditDeleteAction({ type, itemid, createdByid }: Props) {
   const handleDelete = async () => {
     if (type === "question") {
       return await postDeleteQuestion({
-        createdById: createdByid,
         qid: itemid,
         revalidatePath: pathname,
       });
     }
 
-    // TODO: delete action for answer
-
-    return;
+    return await postDeleteAnswer({
+      aid: itemid,
+      revalidatePath: pathname,
+    });
   };
 
   return (

@@ -127,7 +127,10 @@ export default async function QuestionDetailPage({
       <CreateAnswerBox
         qid={qeustion.id}
         createdById={user.id}
-        questionForAi={qeustion.content}
+        questionForAi={{
+          title: qeustion.title,
+          content: qeustion.content,
+        }}
       />
     </div>
   );

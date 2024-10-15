@@ -3,7 +3,7 @@ import { openai } from "./client";
 
 export const POST = async (request: NextRequest) => {
   try {
-    const { question } = await request.json();
+    const { content, title } = await request.json();
     const completion = await openai.chat.completions.create({
       model: "gpt-3.5-turbo",
       messages: [
@@ -14,7 +14,7 @@ export const POST = async (request: NextRequest) => {
         },
         {
           role: "user",
-          content: `Tell me the answer of this question: ${question}`,
+          content: `Tell me the answer of this question: title '${title}' content: '${content}'. Please provide your answer in the form html markup languagge. Dont include this word.`,
         },
       ],
     });

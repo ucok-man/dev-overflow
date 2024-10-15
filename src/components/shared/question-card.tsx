@@ -50,11 +50,7 @@ export default function QuestionCard({ question, cuid }: Props) {
 
         <SignedIn>
           {showActionButtons && (
-            <EditDeleteAction
-              type="question"
-              itemid={question.id}
-              createdByid={cuid}
-            />
+            <EditDeleteAction type="question" itemid={question.id} />
           )}
         </SignedIn>
       </div>

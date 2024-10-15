@@ -6,6 +6,8 @@ export * from "./fetch-top-question.action";
 export * from "./fetch-user-by-clerkid.action";
 export * from "./post-create-answer.action";
 export * from "./post-create-qeustion.action";
+export * from "./post-delete-answer.action";
+export * from "./post-delete-question.action";
 export * from "./post-toggle-save-question.action";
 export * from "./post-toggle-vote-answer.action";
 export * from "./post-toggle-vote-qeustion.action";

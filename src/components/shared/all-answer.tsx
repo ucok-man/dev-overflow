@@ -2,8 +2,10 @@ import { fetchAllAnswer } from "@/lib/actions";
 import { ANSWER_QUERY_FILTER } from "@/lib/constants";
 import { AnswerQueryFilterValue } from "@/lib/enums";
 import { formatTimestamp } from "@/lib/utils";
+import { SignedIn } from "@clerk/nextjs";
 import Image from "next/image";
 import Link from "next/link";
+import EditDeleteAction from "./edit-delelete-action";
 import Filter from "./filter";
 import MobileFilter from "./mobile-filter";
 import Pagination from "./pagination";
@@ -55,29 +57,33 @@ export default async function AllAnswer(props: Props) {
         {data?.answers.map((answer) => (
           <article key={answer.id} className="light-border border-b py-10">
             <div className="mb-8 flex flex-col-reverse justify-between sm:flex-row sm:items-center">
-              <Link
-                href={`/profile/${answer.createdBy.clerkId}`}
-                className="flex items-start sm:items-center"
-              >
-                <div className="flex flex-col sm:flex-row sm:items-center sm:gap-3">
-                  <div className="flex gap-3">
-                    <Image
-                      src={answer.createdBy.picture}
-                      width={18}
-                      height={18}
-                      alt="profile"
-                      className="rounded-full object-cover max-sm:mt-0.5"
-                    />
-                    <p className="body-semibold text-dark300_light700">
-                      {answer.createdBy.name}
+              <div className="flex items-start gap-5 sm:items-center">
+                <Link href={`/profile/${answer.createdBy.clerkId}`}>
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:gap-3">
+                    <div className="flex gap-3">
+                      <Image
+                        src={answer.createdBy.picture}
+                        width={18}
+                        height={18}
+                        alt="profile"
+                        className="rounded-full object-cover max-sm:mt-0.5"
+                      />
+                      <p className="body-semibold text-dark300_light700">
+                        {answer.createdBy.name}
+                      </p>
+                    </div>
+
+                    <p className="small-regular text-light400_light500 ml-0.5 mt-0.5 line-clamp-1">
+                      answered {formatTimestamp(answer.createdAt)}
                     </p>
                   </div>
-
-                  <p className="small-regular text-light400_light500 ml-0.5 mt-0.5 line-clamp-1">
-                    answered {formatTimestamp(answer.createdAt)}
-                  </p>
-                </div>
-              </Link>
+                </Link>
+                <SignedIn>
+                  {props.cuid === answer.createdById && (
+                    <EditDeleteAction type="answer" itemid={answer.id} />
+                  )}
+                </SignedIn>
+              </div>
               <div className="flex justify-end">
                 <Votes
                   type="answer"

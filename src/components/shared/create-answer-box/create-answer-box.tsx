@@ -17,7 +17,7 @@ import ContentFormControl from "./content-form-control";
 type Props = {
   qid: string;
   createdById: string;
-  questionForAi: string;
+  questionForAi: { title: string; content: string };
 };
 
 export default function CreateAnswerBox(props: Props) {
@@ -43,7 +43,10 @@ export default function CreateAnswerBox(props: Props) {
         `${process.env.NEXT_PUBLIC_SERVER_URL}/api/chatgpt`,
         {
           method: "POST",
-          body: JSON.stringify({ question: props.questionForAi }),
+          body: JSON.stringify({
+            title: props.questionForAi.title,
+            content: props.questionForAi.content,
+          }),
         }
       );
 
@@ -55,7 +58,7 @@ export default function CreateAnswerBox(props: Props) {
       const {
         reply: { content },
       }: { reply: { content: string } } = await response.json();
-      const contentHTML = content.replace(/\n/g, "<br />");
+      const contentHTML = content.replace(/```html|```/g, "");
 
       if (editorRef.current) {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
