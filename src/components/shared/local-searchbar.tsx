@@ -21,9 +21,9 @@ export default function LocalSearchbar({
   placeholder,
   route,
 }: Props) {
-  const searchparams = useSearchParams();
-  const pathname = usePathname();
   const router = useRouter();
+  const pathname = usePathname();
+  const searchparams = useSearchParams();
 
   const [prevSearch, setPrevSearch] = useState("");
   const [search, setSearch] = useState(searchparams.get("ql") || "");
@@ -60,7 +60,7 @@ export default function LocalSearchbar({
 
   return (
     <div
-      className={`background-light800_darkgradient flex min-h-[56px] grow items-center gap-4 rounded-[10px] px-4 ${containerClasses}`}
+      className={`background-light800_darkgradient flex min-h-[56px] grow items-center gap-4 rounded-lg px-4 ${containerClasses}`}
     >
       {iconPosition === "left" && (
         <Image

@@ -3,15 +3,15 @@ import Image from "next/image";
 import Link from "next/link";
 
 type Props = {
-  datas: GlobalSearchResultType[] | undefined;
+  data: GlobalSearchResultType[] | undefined;
 };
 
-export default function SearchResult({ datas }: Props) {
-  if (!datas || datas.length <= 0) return NoResultFound();
+export function ResultItems({ data }: Props) {
+  if (!data || data.length <= 0) return NoResultFound();
 
   return (
     <div className="flex flex-col gap-2">
-      {datas!.map((item, index) => (
+      {data!.map((item, index) => (
         <Link
           href={renderLink(item.type, item.id)}
           key={item.type + item.id + index}

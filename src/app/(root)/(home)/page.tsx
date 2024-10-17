@@ -1,12 +1,12 @@
 import {
   Filter,
   HomePageHeader,
-  LocalSearchbar,
   MobileFilter,
   NoResult,
   Pagination,
   QuestionCard,
 } from "@/components";
+import SearchBox from "@/components/shared/searchbox/searchbox";
 import { fetchHomePageQuestion, fetchUserByClerkId } from "@/lib/actions";
 import { QUESTION_QUERY_FILTER } from "@/lib/constants";
 import { QuestionQueryFilterValue } from "@/lib/enums";
@@ -48,12 +48,16 @@ export default async function HomePage({ searchParams }: Props) {
       <HomePageHeader />
       {/* SEARCH BAR */}
       <div className="mt-11 flex justify-between gap-5 max-sm:flex-col sm:items-center">
-        <LocalSearchbar
-          route="/"
-          iconPosition="left"
-          imgSrc="/assets/icons/search.svg"
+        <SearchBox
+          iconposition="left"
+          containerStyle="h-[56px] flex-1 w-full"
           placeholder="Search for questions"
-          containerClasses="flex-1"
+          clearPageWhenTyping
+          search={{
+            clearWhenOffFocus: false,
+            querykey: "ql",
+          }}
+          withresult={{ value: false }}
         />
 
         <MobileFilter

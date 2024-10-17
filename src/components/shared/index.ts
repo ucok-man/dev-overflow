@@ -11,5 +11,6 @@ export { default as ProfileLink } from "./profile-link";
 export { default as QuestionCard } from "./question-card";
 export { default as QuestionForm } from "./question-form/question-form";
 export { default as RenderTag } from "./render-tag";
+export { default as Sparator } from "./sparator";
 export { default as Stats } from "./stats";
 export { default as Votes } from "./votes";
