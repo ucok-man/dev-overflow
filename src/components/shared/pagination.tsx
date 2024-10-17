@@ -14,7 +14,7 @@ export default function Pagination({ page, isnext }: Props) {
   const router = useRouter();
   const pathname = usePathname();
 
-  const onClick = (direction: "prev" | "next") => {
+  const handlePrevNext = (direction: "prev" | "next") => {
     switch (direction) {
       case "prev":
         page = page - 1;
@@ -40,7 +40,7 @@ export default function Pagination({ page, isnext }: Props) {
     <div className="flex w-full items-center justify-center gap-2">
       <Button
         disabled={page === 1}
-        onClick={() => onClick("prev")}
+        onClick={() => handlePrevNext("prev")}
         className="light-border-2 btn flex min-h-[36px] items-center justify-center gap-2 border"
       >
         <p className="body-medium text-dark200_light800">Prev</p>
@@ -50,7 +50,7 @@ export default function Pagination({ page, isnext }: Props) {
       </div>
       <Button
         disabled={!isnext}
-        onClick={() => onClick("next")}
+        onClick={() => handlePrevNext("next")}
         className="light-border-2 btn flex min-h-[36px] items-center justify-center gap-2 border"
       >
         <p className="body-medium text-dark200_light800">Next</p>

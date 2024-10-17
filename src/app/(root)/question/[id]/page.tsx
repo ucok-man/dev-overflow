@@ -8,6 +8,7 @@ import {
 import ParseHTML from "@/components/shared/parse-html";
 import { fetchUserByClerkId } from "@/lib/actions";
 import { fetchQuestionById } from "@/lib/actions/fetch-qeustion-by-id.action";
+import { postUpdateQuestionView } from "@/lib/actions/post-update-question-view";
 import { AnswerQueryFilterValue } from "@/lib/enums";
 import { formatNumber, formatTimestamp } from "@/lib/utils";
 import { auth } from "@clerk/nextjs/server";
@@ -29,6 +30,8 @@ export default async function QuestionDetailPage({
 }: Props) {
   const clerkId = auth().userId as string;
   const user = await fetchUserByClerkId({ clerkid: clerkId });
+
+  await postUpdateQuestionView({ qid: params.id });
   const qeustion = await fetchQuestionById({ qid: params.id });
 
   return (

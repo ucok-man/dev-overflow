@@ -72,7 +72,7 @@ export default function QuestionCard({ question, cuid }: Props) {
           alt="user"
           value={question.createdBy.name}
           title={` - asked ${formatTimestamp(question.createdAt)}`}
-          href={`/profile/${question.createdBy.id}`}
+          href={`/profile/${question.createdBy.clerkId}`}
           isAuthor
           textStyles="body-medium text-dark400_light700"
         />
@@ -88,7 +88,7 @@ export default function QuestionCard({ question, cuid }: Props) {
             imgUrl="/assets/icons/message.svg"
             alt="message"
             value={formatNumber(question.answers.length)}
-            title=" Answers"
+            title="Answers"
             textStyles="small-medium text-dark400_light800"
           />
           <Metric

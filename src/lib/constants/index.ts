@@ -1,4 +1,5 @@
 export * from "./answer-query-filter.constant";
+export * from "./badge-criteria.constant";
 export * from "./mobile-links.constant";
 export * from "./question-query-filter.constant";
 export * from "./search-filter.constant";

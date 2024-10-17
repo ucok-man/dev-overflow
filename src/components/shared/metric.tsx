@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import React from "react";
 
 type Props = {
   imgUrl: string;
@@ -13,14 +14,7 @@ type Props = {
 
 export default function Metric(props: Props) {
   return (
-    <Link
-      href={{
-        href: props.href,
-      }}
-      className={`${
-        props.href ? "flex-center  gap-1" : "flex-center flex-wrap gap-1"
-      }`}
-    >
+    <ShouldLinkOrNot href={props.href}>
       <Image
         src={props.imgUrl}
         width={16}
@@ -40,6 +34,21 @@ export default function Metric(props: Props) {
           {props.title}
         </span>
       </p>
-    </Link>
+    </ShouldLinkOrNot>
   );
+}
+
+function ShouldLinkOrNot(props: {
+  children: React.ReactNode;
+  href: string | undefined;
+}) {
+  if (props.href !== undefined) {
+    return (
+      <Link href={props.href} className="flex-center gap-1">
+        {props.children}
+      </Link>
+    );
+  }
+
+  return <div className="flex-center flex-wrap gap-1">{props.children}</div>;
 }
