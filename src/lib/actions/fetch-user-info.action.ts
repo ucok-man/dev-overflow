@@ -1,3 +1,4 @@
+import to from "await-to-js";
 import prisma from "../database/prisma-client";
 import { calculateBadge } from "../utils";
 
@@ -6,26 +7,39 @@ type FetchUserByIdParams = {
 };
 
 export async function fetchUserInfo(props: FetchUserByIdParams) {
-  const user = await prisma.user.findUnique({
-    where: {
-      clerkId: props.clerkid,
-    },
-    include: {
-      createdQuestion: {
-        select: {
-          views: true,
+  const [err_userfindunique, user] = await to(
+    prisma.user.findUnique({
+      where: {
+        clerkId: props.clerkid,
+      },
+      include: {
+        createdQuestion: {
+          select: {
+            views: true,
+          },
+        },
+        _count: {
+          select: {
+            createdQuestion: true,
+            createdAnswer: true,
+            upvotedAnswers: true,
+            upvotedQuestions: true,
+          },
         },
       },
-      _count: {
-        select: {
-          createdQuestion: true,
-          createdAnswer: true,
-          upvotedAnswers: true,
-          upvotedQuestions: true,
-        },
-      },
-    },
-  });
+    })
+  );
+  if (err_userfindunique !== null) {
+    throw new Error(
+      `[fetchUserInfo] [prisma.user.findUnique] : ${err_userfindunique}`
+    );
+  }
+
+  if (!user) {
+    throw new Error(
+      `[fetchUserInfo] [prisma.user.findUnique] : record with clerkid #${props.clerkid} not found`
+    );
+  }
 
   const badgecounts = calculateBadge({
     criteriaInputs: [

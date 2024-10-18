@@ -1,4 +1,4 @@
-import { SkeletonTheme } from "@/components";
+// import { SkeletonTheme } from "@/components";
 import AuthProvider from "@/context/auth-provider";
 import QueryProvider from "@/context/query-provider";
 import { ThemeProvider } from "@/context/theme-provider";
@@ -40,9 +40,9 @@ export default function RootLayout({ children }: Props) {
       >
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <AuthProvider>
-            <SkeletonTheme>
-              <QueryProvider>{children}</QueryProvider>
-            </SkeletonTheme>
+            {/* <SkeletonTheme> */}
+            <QueryProvider>{children}</QueryProvider>
+            {/* </SkeletonTheme> */}
           </AuthProvider>
         </ThemeProvider>
       </body>

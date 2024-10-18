@@ -1,6 +1,5 @@
 "use client";
 
-import { FilterType } from "@/lib/types";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import queryString from "query-string";
 import {
@@ -12,7 +11,7 @@ import {
   SelectValue,
 } from "../ui/select";
 
-type Props<T extends readonly FilterType[]> = {
+type Props<T extends readonly { name: string; value: string }[]> = {
   filters: T;
   defaultVal: T[number]["value"];
   trigerClasess?: string;
@@ -25,13 +24,9 @@ type Props<T extends readonly FilterType[]> = {
   flexgrow: boolean;
 };
 
-export default function MobileFilter<T extends readonly FilterType[]>({
-  filters,
-  defaultVal,
-  trigerClasess,
-  showWhen,
-  flexgrow,
-}: Props<T>) {
+export default function MobileFilter<
+  T extends readonly { name: string; value: string }[]
+>({ filters, defaultVal, trigerClasess, showWhen, flexgrow }: Props<T>) {
   const searchparams = useSearchParams();
   const pathname = usePathname();
   const router = useRouter();

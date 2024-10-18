@@ -56,8 +56,8 @@ export default function SearchBox(props: Props) {
     const debounce = setTimeout(() => {
       const query = queryString.parse(searchparams.toString());
 
-      if (props.clearPageWhenTyping) {
-        prevSearch !== search && delete query["page"];
+      if (props.clearPageWhenTyping && prevSearch !== search) {
+        delete query["page"];
       }
 
       if (search !== "") {
@@ -157,52 +157,3 @@ function shouldClearWhenOffFocus(elmRef: Node | null, callback: () => void) {
     document.removeEventListener("click", handleOutsideClick);
   };
 }
-
-// type DebounceSearchParam = {
-//   rawquery: string;
-//   searchstate: string;
-//   prevsearchstate: string;
-//   searchquerykey: string;
-//   redirectUrl: string;
-//   router: ReturnType<typeof useRouter>;
-//   clearOtherQueryWhenTyping: boolean;
-//   clearedOtherQueryKeys: string[];
-//   clearWhenOffFocus: boolean;
-//   clearedWhenOffFocusQueryKeys: string[];
-// };
-
-// function debounceSearch(param: DebounceSearchParam) {
-//   const debounce = setTimeout(() => {
-//     const query = queryString.parse(param.rawquery);
-
-//     if (param.clearOtherQueryWhenTyping) {
-//       if (param.prevsearchstate !== param.searchstate) {
-//         param.clearedOtherQueryKeys.forEach((qk) => {
-//           delete query[qk];
-//         });
-//       }
-//     }
-
-//     if (param.searchstate !== "") {
-//       query[param.searchquerykey] = param.searchstate;
-//     } else {
-//       delete query[param.searchquerykey];
-//       if (param.clearWhenOffFocus) {
-//         param.clearedWhenOffFocusQueryKeys.forEach((qk) => {
-//           delete query[qk];
-//         });
-//       }
-//     }
-
-//     const url = queryString.stringifyUrl(
-//       { url: param.redirectUrl, query },
-//       { skipNull: true }
-//     );
-
-//     param.router.push(url, { scroll: false });
-//   }, 300);
-
-//   return function clearfn() {
-//     clearTimeout(debounce);
-//   };
-// }

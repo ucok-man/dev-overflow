@@ -1,22 +1,19 @@
 "use client";
 
-import { FilterType } from "@/lib/types";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import queryString from "query-string";
 import { useState } from "react";
 import { Button } from "../ui/button";
 
-type Props<T extends readonly FilterType[]> = {
+type Props<T extends readonly { name: string; value: string }[]> = {
   filters: T;
   defaultVal: T[number]["value"];
   showWhen: "sm:flex" | "md:flex" | "lg:flex" | "xl:flex" | "2xl:flex";
 };
 
-export default function Filter<T extends readonly FilterType[]>({
-  filters,
-  defaultVal,
-  showWhen,
-}: Props<T>) {
+export default function Filter<
+  T extends readonly { name: string; value: string }[]
+>({ filters, defaultVal, showWhen }: Props<T>) {
   const searchparams = useSearchParams();
   const pathname = usePathname();
   const router = useRouter();

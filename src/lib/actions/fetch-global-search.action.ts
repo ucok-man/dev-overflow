@@ -1,13 +1,12 @@
 "use server";
 
-import { GlobalSearchResultType } from "@/lib/types";
 import delay from "delay";
 
 // TODO: Do real implementation
 export async function fetchGlobalSearch(
   qsearch: string | null,
   qtype: string | null
-): Promise<GlobalSearchResultType[]> {
+): Promise<{ type: string; id: number; title: string }[]> {
   await delay(500);
   return [
     { type: "question", id: 0, title: `Next.js question` },

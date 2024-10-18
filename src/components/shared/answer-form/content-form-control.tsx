@@ -13,7 +13,7 @@ type Props = {
   >;
   editorRef: MutableRefObject<Editor | undefined>;
 };
-export default function ContentFormControl({ field, editorRef }: Props) {
+export function ContentFormControl({ field, editorRef }: Props) {
   const { resolvedTheme } = useTheme();
 
   return (

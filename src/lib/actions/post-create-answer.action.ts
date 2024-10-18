@@ -1,5 +1,6 @@
 "use server";
 
+import to from "await-to-js";
 import { revalidatePath } from "next/cache";
 import prisma from "../database/prisma-client";
 
@@ -11,32 +12,22 @@ type PostCreateAnswerParams = {
 };
 
 export async function postCreateAnswer(params: PostCreateAnswerParams) {
-  try {
-    await prisma.answer.create({
+  const [err_answercreate] = await to(
+    prisma.answer.create({
       data: {
         content: params.content,
         questionId: params.qid,
         createdById: params.createdById,
       },
-    });
+    })
+  );
+  if (err_answercreate !== null) {
+    throw new Error(
+      `[postCreateAnswer] [prisma.answer.create]: ${err_answercreate.message}`
+    );
+  }
 
-    // add reputation to user who created this answer
-    await prisma.user.update({
-      where: {
-        id: params.createdById,
-      },
-      data: {
-        reputation: {
-          increment: 10,
-        },
-      },
-    });
-
-    if (params.revalidatePath) {
-      revalidatePath(params.revalidatePath);
-    }
-  } catch (error) {
-    console.log(`error post create answer: ${error}`);
-    throw error;
+  if (params.revalidatePath) {
+    revalidatePath(params.revalidatePath);
   }
 }

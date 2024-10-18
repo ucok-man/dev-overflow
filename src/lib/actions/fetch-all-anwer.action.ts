@@ -1,23 +1,16 @@
 "use server";
 
+import to from "await-to-js";
 import prisma from "../database/prisma-client";
 import { AnswerQueryFilterValue } from "../enums";
 import { PrismaQueryFindMany } from "../types";
 
-type FetchAllAnswerParams =
-  | {
-      qid: string;
-      withoption: false;
-    }
-  | {
-      qid: string;
-      withoption: true;
-      options: {
-        filter: AnswerQueryFilterValue;
-        page: number;
-        pageSize: number;
-      };
-    };
+type FetchAllAnswerParams = {
+  qid: string;
+  filter: AnswerQueryFilterValue;
+  page: number;
+  pageSize: number;
+};
 
 export async function fetchAllAnswer(params: FetchAllAnswerParams) {
   const query: PrismaQueryFindMany<"answer"> = {};
@@ -25,62 +18,68 @@ export async function fetchAllAnswer(params: FetchAllAnswerParams) {
     questionId: params.qid,
   };
 
-  if (params.withoption) {
-    // create query builder
-    switch (params.options.filter) {
-      case AnswerQueryFilterValue.HighestUpvotes:
-        query.orderBy = {
-          upvotedBy: {
-            _count: "desc",
-          },
-        };
-        break;
+  // create query builder
+  switch (params.filter) {
+    case AnswerQueryFilterValue.HighestUpvotes:
+      query.orderBy = {
+        upvotedBy: {
+          _count: "desc",
+        },
+      };
+      break;
 
-      // TODO: this should be prisma bug????
-      case AnswerQueryFilterValue.LowestUpvotes:
-        query.orderBy = {
-          upvotedBy: {
-            _count: "asc",
-          },
-        };
-        break;
+    // TODO: this should be prisma bug????
+    case AnswerQueryFilterValue.LowestUpvotes:
+      query.orderBy = {
+        upvotedBy: {
+          _count: "asc",
+        },
+      };
+      break;
 
-      case AnswerQueryFilterValue.Recent:
-        query.orderBy = {
-          createdAt: "desc",
-        };
-        break;
+    case AnswerQueryFilterValue.Recent:
+      query.orderBy = {
+        createdAt: "desc",
+      };
+      break;
 
-      case AnswerQueryFilterValue.Oldest:
-        query.orderBy = {
-          createdAt: "asc",
-        };
-        break;
-    }
-
-    query.skip = (params.options.page - 1) * params.options.pageSize;
-    query.take = params.options.pageSize;
+    case AnswerQueryFilterValue.Oldest:
+      query.orderBy = {
+        createdAt: "asc",
+      };
+      break;
   }
 
-  const answers = await prisma.answer.findMany({
-    ...query,
-    include: {
-      createdBy: true,
-    },
-  });
+  query.skip = (params.page - 1) * params.pageSize;
+  query.take = params.pageSize;
 
-  if (!params.withoption) {
-    return { answers, isnext: false };
+  const [errfindmany, answers] = await to(
+    prisma.answer.findMany({
+      ...query,
+      include: {
+        createdBy: true,
+      },
+    })
+  );
+  if (errfindmany !== null) {
+    throw new Error(
+      `[fetchAllAnswer] [prisma.answer.findMany] find users: ${errfindmany.message}`
+    );
   }
 
-  if (params.withoption) {
-    const totalrecord = await prisma.answer.count({
+  const [errcount, totalrecord] = await to(
+    prisma.answer.count({
       where: query.where,
       orderBy: query.orderBy,
-    });
-
-    const isnext = totalrecord > query.skip! + answers.length;
-
-    return { answers, isnext };
+    })
+  );
+  if (errcount !== null) {
+    throw new Error(
+      `[fetchAllAnswer] [prisma.answer.count] count answer record: ${errcount.message}`
+    );
   }
+
+  const isnext = totalrecord > query.skip! + answers.length;
+
+  return { answers, isnext };
 }

@@ -1,5 +1,6 @@
 "use server";
 
+import to from "await-to-js";
 import { revalidatePath } from "next/cache";
 import prisma from "../database/prisma-client";
 
@@ -9,18 +10,20 @@ type PostDeleteQuestionParams = {
 };
 
 export async function postDeleteQuestion(params: PostDeleteQuestionParams) {
-  try {
-    await prisma.question.delete({
+  const [err_questiondelete] = await to(
+    prisma.question.delete({
       where: {
         id: params.qid,
       },
-    });
+    })
+  );
+  if (err_questiondelete !== null) {
+    throw new Error(
+      `[postDeleteQuestion] [prisma.question.delete]: ${err_questiondelete.message}`
+    );
+  }
 
-    if (params.revalidatePath) {
-      revalidatePath(params.revalidatePath);
-    }
-  } catch (error) {
-    console.log(`error post delete question: ${error}`);
-    throw error;
+  if (params.revalidatePath) {
+    revalidatePath(params.revalidatePath);
   }
 }

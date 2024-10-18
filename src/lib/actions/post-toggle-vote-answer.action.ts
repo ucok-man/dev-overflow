@@ -1,5 +1,6 @@
 "use server";
 
+import to from "await-to-js";
 import { revalidatePath } from "next/cache";
 import prisma from "../database/prisma-client";
 
@@ -13,56 +14,195 @@ type PostToggleVoteAnswerParams = {
 };
 
 export async function postToggleVoteAnswer(params: PostToggleVoteAnswerParams) {
-  try {
-    //   get the answer
-    const answer = await prisma.answer.findUnique({
+  // get the answer
+  const [err_answerfindunique, answer] = await to(
+    prisma.answer.findUnique({
       where: {
         id: params.qid,
       },
-    });
+    })
+  );
 
-    if (!answer) {
-      throw new Error(`record #${params.qid} not found`);
-    }
+  if (err_answerfindunique !== null) {
+    throw new Error(
+      `[postToggleVoteAnswer] [prisma.answer.findunique]: ${err_answerfindunique.message}`
+    );
+  }
 
-    // Case action upvote
-    if (params.action === "upvote") {
-      if (params.hasUpvoted) {
-        answer.upvotedByIds = answer.upvotedByIds.filter(
-          (uid) => uid !== params.cuid
-        );
-      }
+  if (!answer) {
+    throw new Error(
+      `[postToggleVoteAnswer] [prisma.answer.findunique]: record #${params.qid} not found`
+    );
+  }
 
-      if (!params.hasUpvoted) {
-        if (params.action === "upvote") {
-          answer.upvotedByIds.push(params.cuid);
-        }
-      }
-      answer.downvotedByIds = answer.downvotedByIds.filter(
-        (uid) => uid !== params.cuid
-      );
-    }
-
-    // Case action downvote
-    if (params.action === "downvote") {
-      if (params.hasDownvoted) {
-        answer.downvotedByIds = answer.downvotedByIds.filter(
-          (uid) => uid !== params.cuid
-        );
-      }
-
-      if (!params.hasDownvoted) {
-        if (params.action === "downvote") {
-          answer.downvotedByIds.push(params.cuid);
-        }
-      }
+  // Case action upvote
+  if (params.action === "upvote") {
+    // This branch for revoking upvote
+    if (params.hasUpvoted) {
+      // Create query builder for answer
       answer.upvotedByIds = answer.upvotedByIds.filter(
         (uid) => uid !== params.cuid
       );
+
+      // This should be decrement / taking back answer author reputation
+      const [err_userupdate] = await to(
+        prisma.user.update({
+          data: {
+            reputation: {
+              decrement: 10,
+            },
+          },
+          where: {
+            id: answer.createdById,
+          },
+        })
+      );
+
+      if (err_userupdate !== null) {
+        throw new Error(
+          `[postToggleVoteAnswer] [prisma.answer.update] created answer: ${err_userupdate.message}`
+        );
+      }
     }
 
-    //   update answer
-    await prisma.answer.update({
+    // This branch for upvoting
+    if (!params.hasUpvoted) {
+      answer.upvotedByIds.push(params.cuid);
+
+      // This should be increment answer author reputation
+      const [err_userupdate] = await to(
+        prisma.user.update({
+          data: {
+            reputation: {
+              increment: 10,
+            },
+          },
+          where: {
+            id: answer.createdById,
+          },
+        })
+      );
+
+      if (err_userupdate !== null) {
+        throw new Error(
+          `[postToggleVoteAnswer] [prisma.answer.update] created answer: ${err_userupdate.message}`
+        );
+      }
+    }
+
+    // This branch for if user already downvoting move to upvote
+    if (params.hasDownvoted) {
+      answer.downvotedByIds = answer.downvotedByIds.filter(
+        (uid) => uid !== params.cuid
+      );
+
+      // This should be increment answer author reputation
+      const [err_userupdate] = await to(
+        prisma.user.update({
+          data: {
+            reputation: {
+              increment: 10,
+            },
+          },
+          where: {
+            id: answer.createdById,
+          },
+        })
+      );
+
+      if (err_userupdate !== null) {
+        throw new Error(
+          `[postToggleVoteAnswer] [prisma.answer.update] created answer: ${err_userupdate.message}`
+        );
+      }
+    }
+  }
+
+  // Case action downvote
+  if (params.action === "downvote") {
+    // This branch for revoking downvote
+    if (params.hasDownvoted) {
+      answer.downvotedByIds = answer.downvotedByIds.filter(
+        (uid) => uid !== params.cuid
+      );
+
+      // This should be increment / taking back answer author reputation
+      const [err_userupdate] = await to(
+        prisma.user.update({
+          data: {
+            reputation: {
+              increment: 10,
+            },
+          },
+          where: {
+            id: answer.createdById,
+          },
+        })
+      );
+
+      if (err_userupdate !== null) {
+        throw new Error(
+          `[postToggleVoteAnswer] [prisma.answer.update] created answer: ${err_userupdate.message}`
+        );
+      }
+    }
+
+    // This branch for downvoting
+    if (!params.hasDownvoted) {
+      answer.downvotedByIds.push(params.cuid);
+
+      // This should be decrement answer author reputation
+      const [err_userupdate] = await to(
+        prisma.user.update({
+          data: {
+            reputation: {
+              decrement: 10,
+            },
+          },
+          where: {
+            id: answer.createdById,
+          },
+        })
+      );
+
+      if (err_userupdate !== null) {
+        throw new Error(
+          `[postToggleVoteAnswer] [prisma.answer.update] created answer: ${err_userupdate.message}`
+        );
+      }
+    }
+
+    // This branch for user already upvote move to downvoting
+    if (params.hasUpvoted) {
+      answer.upvotedByIds = answer.upvotedByIds.filter(
+        (uid) => uid !== params.cuid
+      );
+
+      // This should be decrement answer author reputation
+      const [err_userupdate] = await to(
+        prisma.user.update({
+          data: {
+            reputation: {
+              decrement: 10,
+            },
+          },
+          where: {
+            id: answer.createdById,
+          },
+        })
+      );
+
+      if (err_userupdate !== null) {
+        throw new Error(
+          `[postToggleVoteAnswer] [prisma.answer.update] created answer: ${err_userupdate.message}`
+        );
+      }
+    }
+  }
+
+  // update answer
+  const [err_answerupdate] = await to(
+    prisma.answer.update({
       data: {
         upvotedByIds: answer.upvotedByIds,
         downvotedByIds: answer.downvotedByIds,
@@ -70,37 +210,16 @@ export async function postToggleVoteAnswer(params: PostToggleVoteAnswerParams) {
       where: {
         id: params.qid,
       },
-    });
+    })
+  );
 
-    // Increment author's reputation by +1/-1 for upvoting/revoking an upvote to the answer
-    await prisma.user.update({
-      data: {
-        reputation: {
-          increment: 1,
-        },
-      },
-      where: {
-        id: params.cuid,
-      },
-    });
+  if (err_answerupdate !== null) {
+    throw new Error(
+      `[postToggleVoteAnswer] [prisma.answer.update]: ${err_answerupdate.message}`
+    );
+  }
 
-    // Increment author's reputation by +10/-10 for recieving an upvote/downvote to the answer
-    await prisma.user.update({
-      data: {
-        reputation: {
-          increment: 5,
-        },
-      },
-      where: {
-        id: answer.createdById,
-      },
-    });
-
-    if (params.revalidatePath) {
-      revalidatePath(params.revalidatePath);
-    }
-  } catch (error) {
-    console.log(`error post vote answer: ${error}`);
-    throw error;
+  if (params.revalidatePath) {
+    revalidatePath(params.revalidatePath);
   }
 }

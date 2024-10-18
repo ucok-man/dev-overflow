@@ -1,6 +1,7 @@
 "use server";
 
 import { Tag } from "@prisma/client";
+import to from "await-to-js";
 import { revalidatePath } from "next/cache";
 import prisma from "../database/prisma-client";
 
@@ -13,22 +14,29 @@ export type PostCreateQuestionParams = {
 };
 
 export async function postCreateQuestion(params: PostCreateQuestionParams) {
-  try {
-    const question = await prisma.question.create({
+  const [err_questioncreate, question] = await to(
+    prisma.question.create({
       data: {
         title: params.title,
         content: params.content,
         views: 0,
         createdById: params.createdById,
       },
-    });
+    })
+  );
+  if (err_questioncreate !== null) {
+    throw new Error(
+      `[postCreateQuestion] [prisma.question.create]: ${err_questioncreate.message}`
+    );
+  }
 
-    const tags: Tag[] = [];
-    for (const tagname of params.tags) {
-      // make sure all tage are lowercase
-      const sanitizedtag = tagname.toLowerCase();
+  const tags: Tag[] = [];
+  for (const tagname of params.tags) {
+    // make sure all tage are lowercase
+    const sanitizedtag = tagname.toLowerCase();
 
-      const tag = await prisma.tag.upsert({
+    const [err_tagupsert, tag] = await to(
+      prisma.tag.upsert({
         create: {
           name: sanitizedtag,
           description: "",
@@ -39,36 +47,34 @@ export async function postCreateQuestion(params: PostCreateQuestionParams) {
         where: {
           name: sanitizedtag,
         },
-      });
-      tags.push(tag);
+      })
+    );
+    if (err_tagupsert !== null) {
+      throw new Error(
+        `[postCreateQuestion] [prisma.tag.upsert]: ${err_tagupsert.message}`
+      );
     }
 
-    await prisma.question.update({
+    tags.push(tag);
+  }
+
+  const [err_questionupdate] = await to(
+    prisma.question.update({
       where: {
         id: question.id,
       },
       data: {
         tagIds: tags.map((t) => t.id),
       },
-    });
+    })
+  );
+  if (err_questionupdate !== null) {
+    throw new Error(
+      `[postCreateQuestion] [prisma.question.update]: ${err_questionupdate.message}`
+    );
+  }
 
-    // increment author reputaion by +5 for creating question
-    await prisma.user.update({
-      where: {
-        id: params.createdById,
-      },
-      data: {
-        reputation: {
-          increment: 5,
-        },
-      },
-    });
-
-    if (revalidatePath) {
-      revalidatePath(params.revalidatedPath);
-    }
-  } catch (error) {
-    console.log(`error creating question ${error}`);
-    throw error;
+  if (revalidatePath) {
+    revalidatePath(params.revalidatedPath);
   }
 }

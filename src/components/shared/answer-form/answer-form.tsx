@@ -5,6 +5,7 @@ import { postCreateAnswer } from "@/lib/actions";
 import { AnswerFormValidationSchema } from "@/lib/validation-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Editor } from "@tinymce/tinymce-react";
+import to from "await-to-js";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useRef, useState } from "react";
@@ -12,7 +13,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Button } from "../../ui/button";
 import { Form, FormField } from "../../ui/form";
-import ContentFormControl from "./content-form-control";
+import { ContentFormControl } from "./content-form-control";
 
 type Props = {
   qid: string;
@@ -20,7 +21,7 @@ type Props = {
   questionForAi: { title: string; content: string };
 };
 
-export default function CreateAnswerBox(props: Props) {
+export default function AnswerForm(props: Props) {
   const editorRef = useRef<Editor>();
   const { toast } = useToast();
 
@@ -38,64 +39,63 @@ export default function CreateAnswerBox(props: Props) {
   const handleGenerateAI = async () => {
     setIsSubmittingAI(true);
 
-    try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_SERVER_URL}/api/chatgpt`,
-        {
-          method: "POST",
-          body: JSON.stringify({
-            title: props.questionForAi.title,
-            content: props.questionForAi.content,
-          }),
-        }
+    const [err, response] = await to(
+      fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/chatgpt`, {
+        method: "POST",
+        body: JSON.stringify({
+          title: props.questionForAi.title,
+          content: props.questionForAi.content,
+        }),
+      })
+    );
+    if (err !== null || !response?.ok) {
+      throw new Error(
+        `error fetch ${process.env.NEXT_PUBLIC_SERVER_URL}/api/chatgpt}: ${
+          err?.message || response?.json()
+        } `
       );
-
-      if (!response.ok) {
-        throw new Error(`${response}`);
-      }
-
-      // Convert plain text to HTML format
-      const {
-        reply: { content },
-      }: { reply: { content: string } } = await response.json();
-      const contentHTML = content.replace(/```html|```/g, "");
-
-      if (editorRef.current) {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const editor = editorRef.current as any;
-        editor.setContent(contentHTML);
-      }
-
-      toast({
-        title: `Success generating answer`,
-        variant: "default",
-      });
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setIsSubmittingAI(false);
     }
+
+    // Convert plain text to HTML format
+    const {
+      reply: { content },
+    }: { reply: { content: string } } = await response.json();
+    const contentHTML = content.replace(/```html|```/g, "");
+
+    // fill the editor form
+    if (editorRef.current) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const editor = editorRef.current as any;
+      editor.setContent(contentHTML);
+    }
+
+    toast({
+      title: `Success generating answer`,
+      variant: "default",
+    });
+
+    setIsSubmittingAI(false);
   };
 
   const handleOnSubmit = async (
-    values: z.infer<typeof AnswerFormValidationSchema>
+    input: z.infer<typeof AnswerFormValidationSchema>
   ) => {
     setIsSubmitting(true);
 
-    try {
-      await postCreateAnswer({
-        content: values.content,
+    const [err] = await to(
+      postCreateAnswer({
+        content: input.content,
         createdById: props.createdById,
         qid: props.qid,
         revalidatePath: pathname,
-      });
-
-      form.reset();
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setIsSubmitting(false);
+      })
+    );
+    if (err !== null) {
+      throw new Error(`error post create answer: ${err.message}`);
     }
+
+    form.reset();
+    setIsSubmitting(false);
   };
 
   return (

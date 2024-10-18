@@ -23,12 +23,9 @@ type Props = {
 export default async function AllAnswer(props: Props) {
   const data = await fetchAllAnswer({
     qid: props.qid,
-    withoption: true,
-    options: {
-      filter: props.filter as AnswerQueryFilterValue,
-      page: props.page,
-      pageSize: 10,
-    },
+    filter: props.filter as AnswerQueryFilterValue,
+    page: props.page,
+    pageSize: 10,
   });
 
   return (
@@ -57,6 +54,7 @@ export default async function AllAnswer(props: Props) {
         {data?.answers.map((answer) => (
           <article key={answer.id} className="light-border border-b py-10">
             <div className="mb-8 flex flex-col-reverse justify-between sm:flex-row sm:items-center">
+              {/* Header Link */}
               <div className="flex items-start gap-5 sm:items-center">
                 <Link href={`/profile/${answer.createdBy.clerkId}`}>
                   <div className="flex flex-col sm:flex-row sm:items-center sm:gap-3">
@@ -84,6 +82,8 @@ export default async function AllAnswer(props: Props) {
                   )}
                 </SignedIn>
               </div>
+
+              {/* Votes Component Container */}
               <div className="flex justify-end">
                 <Votes
                   type="answer"

@@ -1,13 +1,18 @@
-import { Pagination, ProfileLink, QuestionCard, Stats } from "@/components";
+import {
+  Pagination,
+  ProfileLink,
+  QuestionCard,
+  Stats,
+} from "@/components/shared";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { fetchUserCreatedQuestion, fetchUserInfo } from "@/lib/actions";
 import { formatdate } from "@/lib/utils";
 import { SignedIn } from "@clerk/nextjs";
 import { auth } from "@clerk/nextjs/server";
+import to from "await-to-js";
 import Image from "next/image";
 import Link from "next/link";
-import { notFound } from "next/navigation";
 
 type Props = {
   params: {
@@ -25,18 +30,27 @@ export default async function ProfileDetailPage({
   searchParams,
 }: Props) {
   const clerkid = auth().userId as string;
-  const { user, badgecounts } = await fetchUserInfo({
-    clerkid: params.clerkid,
-  });
-  if (!user) {
-    return notFound();
+
+  const [err_fetchuserinfo, datainfo] = await to(
+    fetchUserInfo({
+      clerkid: params.clerkid,
+    })
+  );
+
+  if (err_fetchuserinfo !== null) {
+    throw new Error(`[ProfileDetailPage]: ${err_fetchuserinfo.message}`);
   }
 
-  const { userqestions, isnext } = await fetchUserCreatedQuestion({
-    uid: user.id,
-    page: Number(searchParams.page) || 1,
-    pageSize: 10,
-  });
+  const [err_fetchquestion, dataquestion] = await to(
+    fetchUserCreatedQuestion({
+      uid: datainfo.user.id,
+      page: Number(searchParams.page) || 1,
+      pageSize: 10,
+    })
+  );
+  if (err_fetchquestion !== null) {
+    throw new Error(`[ProfileDetailPage]: ${err_fetchquestion.message}`);
+  }
 
   return (
     <div>
@@ -44,7 +58,7 @@ export default async function ProfileDetailPage({
       <div className="flex flex-col-reverse items-start justify-between sm:flex-row">
         <div className="flex flex-col items-start gap-4 lg:flex-row">
           <Image
-            src={user.picture}
+            src={datainfo.user.picture}
             alt="profile picture"
             width={140}
             height={140}
@@ -52,36 +66,38 @@ export default async function ProfileDetailPage({
           />
 
           <div className="mt-3">
-            <h2 className="h2-bold text-dark100_light900">{user.name}</h2>
+            <h2 className="h2-bold text-dark100_light900">
+              {datainfo.user.name}
+            </h2>
             <p className="paragraph-regular text-dark200_light800">
-              @{user.username}
+              @{datainfo.user.username}
             </p>
 
             <div className="mt-5 flex flex-wrap items-center justify-start gap-5">
-              {user.website && (
+              {datainfo.user.website && (
                 <ProfileLink
                   imgUrl="/assets/icons/link.svg"
-                  href={user.website}
+                  href={datainfo.user.website}
                   title="Portfolio"
                 />
               )}
 
-              {user.location && (
+              {datainfo.user.location && (
                 <ProfileLink
                   imgUrl="/assets/icons/location.svg"
-                  title={user.location}
+                  title={datainfo.user.location}
                 />
               )}
 
               <ProfileLink
                 imgUrl="/assets/icons/calendar.svg"
-                title={formatdate(user.createdAt)}
+                title={formatdate(datainfo.user.createdAt)}
               />
             </div>
 
-            {user.bio && (
+            {datainfo.user.bio && (
               <p className="paragraph-regular text-dark400_light800 mt-8">
-                {user.bio}
+                {datainfo.user.bio}
               </p>
             )}
           </div>
@@ -103,10 +119,10 @@ export default async function ProfileDetailPage({
 
       {/* Statistic */}
       <Stats
-        reputation={user.reputation}
-        totalQuestions={user._count.createdQuestion}
-        totalAnswers={user._count.createdAnswer}
-        badges={badgecounts}
+        reputation={datainfo.user.reputation}
+        totalQuestions={datainfo.user._count.createdQuestion}
+        totalAnswers={datainfo.user._count.createdAnswer}
+        badges={datainfo.badgecounts}
       />
 
       {/* Items List */}
@@ -125,13 +141,13 @@ export default async function ProfileDetailPage({
             className="mt-5 flex w-full flex-col gap-6"
           >
             {/* Question Tab List */}
-            {userqestions.map((question) => (
+            {dataquestion.userquestions.map((question) => (
               <div key={question.id}>
-                <QuestionCard question={question} cuid={user.id} />
+                <QuestionCard question={question} cuid={datainfo.user.id} />
                 <div className="mt-10">
                   <Pagination
                     page={Number(searchParams.page) || 1}
-                    isnext={isnext}
+                    isnext={dataquestion.isnext}
                   />
                 </div>
               </div>

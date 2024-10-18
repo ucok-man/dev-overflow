@@ -5,8 +5,7 @@ import {
   MenubarContent,
   MenubarMenu,
   MenubarTrigger,
-  Skeleton,
-} from "@/components";
+} from "@/components/ui/menubar";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 import ContentItem from "./content-item";
@@ -20,17 +19,7 @@ export default function ThemeSwithcer() {
     setMounted(true);
   }, []);
 
-  if (!mounted) {
-    return (
-      <Menubar className="relative border-none bg-transparent shadow-none">
-        <MenubarMenu>
-          <MenubarTrigger className="focus:bg-light-900 data-[state=open]:bg-light-900 dark:focus:bg-dark-200 dark:data-[state=open]:bg-dark-200">
-            <Skeleton width={20} height={20} />
-          </MenubarTrigger>
-        </MenubarMenu>
-      </Menubar>
-    );
-  }
+  if (!mounted) return null;
 
   return (
     <Menubar className="relative border-none bg-transparent shadow-none">

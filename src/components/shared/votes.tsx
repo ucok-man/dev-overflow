@@ -4,7 +4,7 @@ import { useToast } from "@/hooks/use-toast";
 import {
   postToggleSaveQuestion,
   postToggleVoteAnswer,
-  postToggleVoteQeustion,
+  postToggleVoteQuestion,
 } from "@/lib/actions";
 import { formatNumber } from "@/lib/utils";
 import Image from "next/image";
@@ -44,7 +44,7 @@ export default function Votes(props: Props) {
     }
 
     if (props.type === "question") {
-      await postToggleVoteQeustion({
+      await postToggleVoteQuestion({
         qid: props.itemId,
         action: action,
         cuid: props.cuid,

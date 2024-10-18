@@ -1,3 +1,4 @@
+import to from "await-to-js";
 import prisma from "../database/prisma-client";
 
 type FetchUserCreatedQuestionParams = {
@@ -11,10 +12,10 @@ export async function fetchUserCreatedQuestion({
   page,
   pageSize,
 }: FetchUserCreatedQuestionParams) {
-  try {
-    const skip = (page - 1) * pageSize;
+  const skip = (page - 1) * pageSize;
 
-    const userqestions = await prisma.question.findMany({
+  const [err_questionfindmany, userquestions] = await to(
+    prisma.question.findMany({
       where: {
         createdById: uid,
       },
@@ -26,17 +27,29 @@ export async function fetchUserCreatedQuestion({
       },
       skip: skip,
       take: pageSize,
-    });
+    })
+  );
+  if (err_questionfindmany !== null) {
+    throw new Error(
+      `[fetchUserCreatedQuestion] [prisma.question.findMany]: ${err_questionfindmany.message}`
+    );
+  }
 
-    const totalquestion = await prisma.question.count({
+  const [err_questioncount, totalrecord] = await to(
+    prisma.question.count({
       where: {
         createdById: uid,
       },
-    });
-    const isnext = totalquestion > skip + userqestions.length;
-    return { userqestions, isnext };
-  } catch (error) {
-    console.log(`error fetch user created question: ${error}`);
-    throw error;
+    })
+  );
+
+  if (err_questioncount !== null) {
+    throw new Error(
+      `[fetchUserCreatedQuestion] [prisma.question.count]: ${err_questioncount.message}`
+    );
   }
+
+  const isnext = totalrecord > skip + userquestions.length;
+
+  return { userquestions, isnext };
 }

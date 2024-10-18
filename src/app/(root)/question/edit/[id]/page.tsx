@@ -1,4 +1,4 @@
-import { QuestionForm } from "@/components";
+import { QuestionForm } from "@/components/shared";
 import { fetchQuestionById } from "@/lib/actions/fetch-qeustion-by-id.action";
 
 type Props = {

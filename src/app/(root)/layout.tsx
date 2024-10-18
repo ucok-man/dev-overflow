@@ -1,4 +1,6 @@
-import { LeftSidebar, Navbar, RightSidebar } from "@/components";
+import { LeftSidebar } from "@/components/left-sidebar";
+import { Navbar } from "@/components/navbar";
+import { RightSidebar } from "@/components/right-sidebar";
 import { Toaster } from "@/components/ui/toaster";
 import React from "react";
 

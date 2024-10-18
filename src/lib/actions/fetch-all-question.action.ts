@@ -1,10 +1,11 @@
 "use server";
 
+import to from "await-to-js";
 import prisma from "../database/prisma-client";
 import { QuestionQueryFilterValue } from "../enums";
 import { PrismaQueryFindMany } from "../types";
 
-export type FetchHomePageQuestionParam = {
+export type FetchAllQuestionParam = {
   searchquery?: string;
   filter?: QuestionQueryFilterValue;
   page?: number;
@@ -12,9 +13,7 @@ export type FetchHomePageQuestionParam = {
   cuid?: string;
 };
 
-export async function fetchHomePageQuestion(
-  params: FetchHomePageQuestionParam
-) {
+export async function fetchAllQuestion(params: FetchAllQuestionParam) {
   // fill the default value
   if (params.filter === undefined)
     params.filter = QuestionQueryFilterValue.recommended;
@@ -73,13 +72,13 @@ export async function fetchHomePageQuestion(
     return null;
   }
 
-  try {
-    // pagination
-    query.take = params.pageSize;
-    query.skip = (params.page - 1) * params.pageSize;
+  // pagination
+  query.take = params.pageSize;
+  query.skip = (params.page - 1) * params.pageSize;
 
-    // execute and include tag and createdBy record
-    const questions = await prisma.question.findMany({
+  // execute and include tag and createdBy record
+  const [err_qeustionfindmany, questions] = await to(
+    prisma.question.findMany({
       ...query,
       ...{
         include: {
@@ -91,18 +90,28 @@ export async function fetchHomePageQuestion(
           savedBy: true,
         },
       },
-    });
+    })
+  );
+  if (err_qeustionfindmany !== null) {
+    throw new Error(
+      `[fetchAllQuestion] [prisma.question.findMany]: ${err_qeustionfindmany.message}`
+    );
+  }
 
-    // get total record
-    const totalrecord = await prisma.question.count({
+  // get total record
+  const [err_questioncount, totalrecord] = await to(
+    prisma.question.count({
       where: query.where,
       orderBy: query.orderBy,
-    });
-    const isNext = totalrecord > query.skip + questions.length;
-
-    return { questions, isNext };
-  } catch (error) {
-    console.log(error);
-    throw error;
+    })
+  );
+  if (err_questioncount !== null) {
+    throw new Error(
+      `[fetchAllQuestion] [prisma.question.count]: ${err_questioncount.message}`
+    );
   }
+
+  const isNext = totalrecord > query.skip + questions.length;
+
+  return { questions, isNext };
 }

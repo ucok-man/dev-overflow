@@ -1,9 +1,8 @@
+import { Sparator } from "@/components/shared";
 import { fetchGlobalSearch } from "@/lib/actions";
-import { GlobalSearchResultType } from "@/lib/types";
 import { ReloadIcon } from "@radix-ui/react-icons";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import Sparator from "../../sparator";
 import { ResultItems } from "./result-item";
 import { SearchFilter } from "./search-filter";
 
@@ -23,7 +22,13 @@ export function SearchResult({
 }: Props) {
   const searchParams = useSearchParams();
   const [isLoading, setIsLoading] = useState(false);
-  const [result, setResult] = useState<GlobalSearchResultType[]>([]);
+  const [result, setResult] = useState<
+    {
+      type: string;
+      id: number;
+      title: string;
+    }[]
+  >([]);
 
   useEffect(() => {
     const fetchResult = async () => {
@@ -37,7 +42,6 @@ export function SearchResult({
         );
         setResult(res);
       } catch (error) {
-        console.error(error);
         throw error;
       } finally {
         setIsLoading(false);

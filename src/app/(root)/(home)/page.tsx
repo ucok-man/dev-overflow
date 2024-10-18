@@ -1,18 +1,20 @@
 import {
   Filter,
-  HomePageHeader,
   MobileFilter,
   NoResult,
   Pagination,
   QuestionCard,
-} from "@/components";
-import SearchBox from "@/components/shared/searchbox/searchbox";
-import { fetchHomePageQuestion, fetchUserByClerkId } from "@/lib/actions";
+  SearchBox,
+} from "@/components/shared";
+import { Button } from "@/components/ui/button";
+import { fetchAllQuestion, fetchUserByClerkId } from "@/lib/actions";
 import { QUESTION_QUERY_FILTER } from "@/lib/constants";
 import { QuestionQueryFilterValue } from "@/lib/enums";
 import { auth } from "@clerk/nextjs/server";
 import { User } from "@prisma/client";
+import to from "await-to-js";
 import { Metadata } from "next";
+import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "Home | Dev Overflow",
@@ -29,23 +31,44 @@ type Props = {
 export default async function HomePage({ searchParams }: Props) {
   const clerkid = auth().userId;
 
-  let loginuser: User | undefined = undefined;
-  if (clerkid) {
-    loginuser = await fetchUserByClerkId({ clerkid });
+  let user: User | undefined;
+  let err: Error | null;
+  let data: Awaited<ReturnType<typeof fetchAllQuestion>> | undefined;
+
+  if (clerkid !== null) {
+    [err, user] = await to(fetchUserByClerkId({ clerkid }));
+    if (err !== null) {
+      console.log(`[HomePage] : ${err.message}`);
+      throw new Error(`[HomePage] : ${err.message}`);
+    }
   }
 
-  const data = await fetchHomePageQuestion({
-    filter:
-      QuestionQueryFilterValue[searchParams.fl as QuestionQueryFilterValue],
-    searchquery: searchParams.ql,
-    page: Number(searchParams.page) || 1,
-    cuid: loginuser ? loginuser.id : undefined,
-  });
+  // eslint-disable-next-line prefer-const
+  [err, data] = await to(
+    fetchAllQuestion({
+      filter:
+        QuestionQueryFilterValue[searchParams.fl as QuestionQueryFilterValue],
+      searchquery: searchParams.ql,
+      page: Number(searchParams.page) || 1,
+      cuid: user?.id || undefined,
+    })
+  );
+  if (err !== null) {
+    throw new Error(`error [HomePage] : ${err.message}`);
+  }
 
   return (
     <div>
       {/* HEADER  */}
-      <HomePageHeader />
+      <div className="flex w-full flex-col-reverse justify-between gap-4 sm:flex-row sm:items-center">
+        <h1 className="h1-bold text-dark100_light900">All Questions</h1>
+
+        <Link href="/ask-question" className="flex justify-end max-sm:w-full">
+          <Button className="primary-gradient min-h-[46px] px-4 py-3 !text-light-900">
+            Ask a Question
+          </Button>
+        </Link>
+      </div>
       {/* SEARCH BAR */}
       <div className="mt-11 flex justify-between gap-5 max-sm:flex-col sm:items-center">
         <SearchBox
@@ -89,7 +112,7 @@ export default async function HomePage({ searchParams }: Props) {
               <QuestionCard
                 key={question.id}
                 question={question}
-                cuid={loginuser?.id}
+                cuid={user?.id}
               />
             ))}
           </div>

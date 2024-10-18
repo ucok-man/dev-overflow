@@ -1,10 +1,10 @@
 import {
   AllAnswer,
-  CreateAnswerBox,
+  AnswerForm,
   Metric,
   RenderTag,
   Votes,
-} from "@/components";
+} from "@/components/shared";
 import ParseHTML from "@/components/shared/parse-html";
 import { fetchUserByClerkId } from "@/lib/actions";
 import { fetchQuestionById } from "@/lib/actions/fetch-qeustion-by-id.action";
@@ -127,7 +127,7 @@ export default async function QuestionDetailPage({
       />
 
       {/* Creating answer box */}
-      <CreateAnswerBox
+      <AnswerForm
         qid={qeustion.id}
         createdById={user.id}
         questionForAi={{

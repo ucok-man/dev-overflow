@@ -1,9 +1,14 @@
-import { GlobalSearchResultType } from "@/lib/types";
 import Image from "next/image";
 import Link from "next/link";
 
 type Props = {
-  data: GlobalSearchResultType[] | undefined;
+  data:
+    | {
+        type: string;
+        id: number;
+        title: string;
+      }[]
+    | undefined;
 };
 
 export function ResultItems({ data }: Props) {
