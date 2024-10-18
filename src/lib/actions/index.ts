@@ -4,6 +4,7 @@ export * from "./fetch-global-search.action";
 export * from "./fetch-popular-tag.action";
 export * from "./fetch-top-question.action";
 export * from "./fetch-user-by-clerkid.action";
+export * from "./fetch-user-created-answer.action";
 export * from "./fetch-user-created-question.action";
 export * from "./fetch-user-info.action";
 export * from "./post-create-answer.action";

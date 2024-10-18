@@ -1,4 +1,4 @@
-import { QuestionForm } from "@/components";
+import { QuestionForm } from "@/components/shared";
 import { fetchUserByClerkId } from "@/lib/actions";
 import { auth } from "@clerk/nextjs/server";
 
@@ -10,7 +10,7 @@ export default async function AskQuestionPage() {
     <div>
       <h1 className="h1-bold text-dark100_light900">Ask a question</h1>
       <div className="mt-9">
-        <QuestionForm uid={user.id} type="create" />
+        <QuestionForm cuid={user.id} type="create" />
       </div>
     </div>
   );

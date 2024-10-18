@@ -26,5 +26,6 @@ export async function fetchUserByClerkId(params: FetchUserByClerkIdParams) {
       `[fetchUserByClerkId] [prisma.user.findUnique] : record with clerkid #${params.clerkid} not found`
     );
   }
+
   return user;
 }

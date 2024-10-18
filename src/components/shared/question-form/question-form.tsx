@@ -17,7 +17,7 @@ import TitleFormControl from "./title-form-control";
 type Props =
   | {
       type: "create";
-      uid: string;
+      cuid: string;
     }
   | {
       type: "edit";
@@ -61,7 +61,7 @@ export default function QuestionForm(props: Props) {
           title: values.title,
           content: values.explanation,
           tags: values.tags,
-          createdById: props.uid,
+          createdById: props.cuid,
           revalidatedPath: pathname,
         });
         router.push("/");

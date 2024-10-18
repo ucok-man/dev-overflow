@@ -4,9 +4,14 @@ import {
   QuestionCard,
   Stats,
 } from "@/components/shared";
+import AnswerCard from "@/components/shared/answer-card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { fetchUserCreatedQuestion, fetchUserInfo } from "@/lib/actions";
+import {
+  fetchUserCreatedAnswer,
+  fetchUserCreatedQuestion,
+  fetchUserInfo,
+} from "@/lib/actions";
 import { formatdate } from "@/lib/utils";
 import { SignedIn } from "@clerk/nextjs";
 import { auth } from "@clerk/nextjs/server";
@@ -50,6 +55,18 @@ export default async function ProfileDetailPage({
   );
   if (err_fetchquestion !== null) {
     throw new Error(`[ProfileDetailPage]: ${err_fetchquestion.message}`);
+  }
+
+  const [err_fetchanswer, dataanswer] = await to(
+    fetchUserCreatedAnswer({
+      uid: datainfo.user.id,
+      page: Number(searchParams.page) || 1,
+      pageSize: 10,
+    })
+  );
+
+  if (err_fetchanswer !== null) {
+    throw new Error(`[ProfileDetailPage]: ${err_fetchanswer.message}`);
   }
 
   return (
@@ -130,7 +147,7 @@ export default async function ProfileDetailPage({
         <Tabs defaultValue="top-posts" className="flex-1">
           <TabsList className="background-light800_dark400 min-h-[42px] p-1">
             <TabsTrigger value="top-posts" className="tab">
-              Top Posts
+              Questions
             </TabsTrigger>
             <TabsTrigger value="answers" className="tab">
               Answers
@@ -143,7 +160,7 @@ export default async function ProfileDetailPage({
             {/* Question Tab List */}
             {dataquestion.userquestions.map((question) => (
               <div key={question.id}>
-                <QuestionCard question={question} cuid={datainfo.user.id} />
+                <QuestionCard question={question} uid={params.clerkid} />
                 <div className="mt-10">
                   <Pagination
                     page={Number(searchParams.page) || 1}
@@ -154,11 +171,18 @@ export default async function ProfileDetailPage({
             ))}
           </TabsContent>
           <TabsContent value="answers" className="flex w-full flex-col gap-6">
-            {/* <AnswersTab
-              searchParams={searchParams}
-              userId={userInfo.user._id}
-              clerkId={clerkId}
-            /> */}
+            {/* Answer Tab List */}
+            {dataanswer.useranswers.map((answer) => (
+              <div key={answer.id}>
+                <AnswerCard answer={answer} uid={params.clerkid} />
+                <div className="mt-10">
+                  <Pagination
+                    page={Number(searchParams.page) || 1}
+                    isnext={dataquestion.isnext}
+                  />
+                </div>
+              </div>
+            ))}
           </TabsContent>
         </Tabs>
       </div>

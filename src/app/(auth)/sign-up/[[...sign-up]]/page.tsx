@@ -11,6 +11,8 @@ export default function SignupPage() {
             footerActionLink: "primary-text-gradient hover:no-underline",
           },
         }}
+        forceRedirectUrl={"/syncing"}
+        fallbackRedirectUrl={"/syncing"}
       />
     </div>
   );

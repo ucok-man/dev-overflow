@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import { fetchAllQuestion, fetchUserByClerkId } from "@/lib/actions";
 import { QUESTION_QUERY_FILTER } from "@/lib/constants";
 import { QuestionQueryFilterValue } from "@/lib/enums";
-import { auth } from "@clerk/nextjs/server";
+import { currentUser } from "@clerk/nextjs/server";
 import { User } from "@prisma/client";
 import to from "await-to-js";
 import { Metadata } from "next";
@@ -29,17 +29,16 @@ type Props = {
 };
 
 export default async function HomePage({ searchParams }: Props) {
-  const clerkid = auth().userId;
+  const clerkuser = await currentUser();
 
   let user: User | undefined;
   let err: Error | null;
   let data: Awaited<ReturnType<typeof fetchAllQuestion>> | undefined;
 
-  if (clerkid !== null) {
-    [err, user] = await to(fetchUserByClerkId({ clerkid }));
+  if (clerkuser !== null) {
+    [err, user] = await to(fetchUserByClerkId({ clerkid: clerkuser.id }));
     if (err !== null) {
-      console.log(`[HomePage] : ${err.message}`);
-      throw new Error(`[HomePage] : ${err.message}`);
+      throw new Error(`[HomePage]: ${err.message}`);
     }
   }
 
@@ -54,7 +53,7 @@ export default async function HomePage({ searchParams }: Props) {
     })
   );
   if (err !== null) {
-    throw new Error(`error [HomePage] : ${err.message}`);
+    throw new Error(`[HomePage] : ${err.message}`);
   }
 
   return (
@@ -112,7 +111,7 @@ export default async function HomePage({ searchParams }: Props) {
               <QuestionCard
                 key={question.id}
                 question={question}
-                cuid={user?.id}
+                uid={user?.id}
               />
             ))}
           </div>

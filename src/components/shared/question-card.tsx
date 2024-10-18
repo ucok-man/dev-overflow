@@ -28,11 +28,11 @@ type Props = {
     views: number;
     createdAt: Date;
   };
-  cuid?: string | null;
+  uid?: string | null;
 };
 
-export default function QuestionCard({ question, cuid }: Props) {
-  const showActionButtons = cuid && cuid === question.createdBy.id;
+export default function QuestionCard({ question, uid }: Props) {
+  const showActionButtons = uid && uid === question.createdBy.id;
 
   return (
     <div className="card-wrapper rounded-[10px] p-9 sm:px-11">

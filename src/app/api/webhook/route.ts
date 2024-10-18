@@ -69,10 +69,10 @@ export async function POST(req: Request) {
           reputation: 0,
         },
       });
-      return NextResponse.json({ message: "OK", user: user });
+      return NextResponse.json({ message: "OK", user: user }, { status: 200 });
     }
 
     default:
-      return NextResponse.json({ message: "OK" });
+      return NextResponse.json({ message: "OK" }, { status: 200 });
   }
 }
